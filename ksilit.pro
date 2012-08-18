@@ -7,3 +7,9 @@ HEADERS += \
 
 FORMS += \
     src/mainwindow.ui
+
+
+UI_DIR = build
+MOC_DIR = build
+OBJECTS_DIR = build
+DESTDIR = bin
