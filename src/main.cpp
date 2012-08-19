@@ -13,20 +13,59 @@
 #include "dbg.h"
 
 #include <QtGui/QApplication>
-#include <QDebug>
-#include <QDate>
+#include <QtTest/QtTest>
 
 #include "mainwindow.h"
+#include "ksilitunittest.h"
 
+/*******************************************************************************
+  NAME: unitTestProcess
+  DESCRIPTION: Function for launching unit tests mechanism
+  ARGUMENTS:
+  Input:
+    void
+  Output:
+    int
+  RETURN VALUE:
+    0 - if successful
+    another value - tests fail
+*******************************************************************************/
+int unitTestProcess() {
+  int rv = QTest::qExec(new KsilitUnitTest);
+
+  return rv;
+}
+
+/*******************************************************************************
+  NAME: main
+  DESCRIPTION: The main function.
+  ARGUMENTS:
+  Input:
+    int argc
+    char *argv[]
+  Output:
+    int
+  RETURN VALUE:
+    0 - if successful
+*******************************************************************************/
 int main(int argc, char *argv[]) {
   DBGS(PRINT_START("void"));
 
-  QApplication a(argc, argv);
-  MainWindow w;
+  int rv = 0;
 
-  w.show();
-  a.exec();
+  rv = unitTestProcess();
+
+  if (rv == 0) {
+    QApplication a(argc, argv);
+    MainWindow w;
+
+    w.show();
+    a.exec();
+  }
+  else {
+    DBGE(PRINT_ERROR("Unit stets fail!"));
+  }
 
   DBGR(PRINT_RETURN("ksilit terminated."));
-  return 0;
+  return rv;
 }
