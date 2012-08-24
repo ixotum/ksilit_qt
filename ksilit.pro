@@ -20,3 +20,7 @@ OBJECTS_DIR = build
 DESTDIR = bin
 
 CONFIG += qtestlib
+
+ksilit_install.path=/usr/local/bin/
+ksilit_install.files=bin/ksilit
+INSTALLS += ksilit_install
