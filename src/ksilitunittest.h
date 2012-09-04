@@ -18,7 +18,7 @@ public:
   KsilitUnitTest();
 
 private slots:
-  void test();
+  void jotParent();
 };
 
 #endif // KSILITUNITTEST_H

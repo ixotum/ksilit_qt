@@ -11,7 +11,11 @@
 class Jot
 {
 public:
-  Jot();
+  Jot(Jot *parent = 0);
+  Jot *parent();
+
+private:
+  Jot *parentJot;
 };
 
 #endif // JOT_H

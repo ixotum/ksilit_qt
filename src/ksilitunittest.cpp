@@ -9,11 +9,18 @@
 #include <QtTest/QtTest>
 
 #include "ksilitunittest.h"
+#include "jot.h"
 
 KsilitUnitTest::KsilitUnitTest()
 {
 }
 
-void KsilitUnitTest::test() {
-  QCOMPARE(0, 0);
+void KsilitUnitTest::jotParent() {
+  Jot *jot = new Jot;
+  Jot *parent = jot->parent();
+  QVERIFY(!parent);
+
+  Jot *jot2 = new Jot(jot);
+  Jot *parent2 = jot2->parent();
+  QVERIFY(parent2);
 }
