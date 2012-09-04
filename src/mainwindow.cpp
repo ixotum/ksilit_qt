@@ -4,7 +4,6 @@
   DATE: 2012-08-18 14:27:37
   DESCRIPTION: This file contains implementation of MainWindow class
 *******************************************************************************/
-
 #define MAINWINDOW_DBG_LVL     0
 #define MAINWINDOW_DBG_OPTIONS DBG_W+DBG_E//+DBG_S+DBG_R
 
