@@ -3,14 +3,16 @@ SOURCES += \
     src/mainwindow.cpp \
     src/dbg.cpp \
     src/ksilitunittest.cpp \
-    src/jot.cpp
+    src/jot.cpp \
+    src/jottermodel.cpp
 
 HEADERS += \
     src/mainwindow.h \
     src/dbg.h \
     src/defines.h \
     src/ksilitunittest.h \
-    src/jot.h
+    src/jot.h \
+    src/jottermodel.h
 
 FORMS += \
     src/mainwindow.ui
