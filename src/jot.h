@@ -8,14 +8,18 @@
 #ifndef JOT_H
 #define JOT_H
 
+#include <QList>
+
 class Jot
 {
 public:
   Jot(Jot *parent = 0);
-  Jot *parent();
+  Jot *parent() const;
+  int childCount() const;
 
 private:
   Jot *parentJot;
+  QList<Jot *> children;
 };
 
 #endif // JOT_H

@@ -24,3 +24,11 @@ void KsilitUnitTest::jotParent() {
   Jot *parent2 = jot2->parent();
   QVERIFY(parent2);
 }
+
+void KsilitUnitTest::jotChildCount() {
+  int childCount = 0;
+  Jot *jot = new Jot;
+
+  childCount = jot->childCount();
+  QCOMPARE(childCount, 0);
+}

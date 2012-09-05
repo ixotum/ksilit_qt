@@ -22,8 +22,18 @@ Jot::Jot(Jot *parent)
   NAME: parent
   DESCRIPTION: Returns parentJot
 *******************************************************************************/
-Jot *Jot::parent() {
+Jot *Jot::parent() const {
   DBGS(PRINT_START());
   DBGR(PRINT_RETURN("parentJot: 0x%08x", parentJot));
   return parentJot;
+}
+
+/*******************************************************************************
+  NAME: childCount
+  DESCRIPTION: Returns childCount
+*******************************************************************************/
+int Jot::childCount() const {
+  DBGS(PRINT_START());
+  DBGR(PRINT_RETURN("child count: %i", children.count()));
+  return children.count();
 }

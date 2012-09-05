@@ -19,6 +19,7 @@ public:
 
 private slots:
   void jotParent();
+  void jotChildCount();
 };
 
 #endif // KSILITUNITTEST_H
