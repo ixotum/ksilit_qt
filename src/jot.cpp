@@ -30,10 +30,20 @@ Jot *Jot::parent() const {
 
 /*******************************************************************************
   NAME: childCount
-  DESCRIPTION: Returns childCount
+  DESCRIPTION: Returns amount of children
 *******************************************************************************/
 int Jot::childCount() const {
   DBGS(PRINT_START());
   DBGR(PRINT_RETURN("child count: %i", children.count()));
   return children.count();
+}
+
+/*******************************************************************************
+  NAME: columnCount
+  DESCRIPTION: Returns amount of columns
+*******************************************************************************/
+int Jot::columnCount() const {
+  DBGS(PRINT_START());
+  DBGR(PRINT_RETURN("child column: %i", columnData.count()));
+  return columnData.count();
 }

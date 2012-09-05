@@ -32,3 +32,11 @@ void KsilitUnitTest::jotChildCount() {
   childCount = jot->childCount();
   QCOMPARE(childCount, 0);
 }
+
+void KsilitUnitTest::jotColumnCount() {
+  int columnCount = 0;
+  Jot *jot = new Jot;
+
+  columnCount = jot->columnCount();
+  QCOMPARE(columnCount, 0);
+}

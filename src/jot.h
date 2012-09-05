@@ -9,6 +9,8 @@
 #define JOT_H
 
 #include <QList>
+#include <QVector>
+#include <QVariant>
 
 class Jot
 {
@@ -16,10 +18,12 @@ public:
   Jot(Jot *parent = 0);
   Jot *parent() const;
   int childCount() const;
+  int columnCount() const;
 
 private:
   Jot *parentJot;
   QList<Jot *> children;
+  QVector<QVariant> columnData;
 };
 
 #endif // JOT_H
