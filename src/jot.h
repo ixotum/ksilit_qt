@@ -19,6 +19,7 @@ public:
   Jot *parent() const;
   int childCount() const;
   int columnCount() const;
+  bool insertChildren(int position, int count);
 
 private:
   Jot *parentJot;

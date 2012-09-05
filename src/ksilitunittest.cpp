@@ -25,12 +25,19 @@ void KsilitUnitTest::jotParent() {
   QVERIFY(parent2);
 }
 
-void KsilitUnitTest::jotChildCount() {
+void KsilitUnitTest::jotInsertChildren() {
   int childCount = 0;
+  bool success = false;
   Jot *jot = new Jot;
 
   childCount = jot->childCount();
   QCOMPARE(childCount, 0);
+
+  success = jot->insertChildren(0, 1);
+  QCOMPARE(success, true);
+
+  childCount = jot->childCount();
+  QCOMPARE(childCount, 1);
 }
 
 void KsilitUnitTest::jotColumnCount() {
@@ -38,5 +45,5 @@ void KsilitUnitTest::jotColumnCount() {
   Jot *jot = new Jot;
 
   columnCount = jot->columnCount();
-  QCOMPARE(columnCount, 0);
+  QCOMPARE(columnCount, 1);
 }

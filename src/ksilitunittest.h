@@ -19,7 +19,7 @@ public:
 
 private slots:
   void jotParent();
-  void jotChildCount();
+  void jotInsertChildren();
   void jotColumnCount();
 };
 

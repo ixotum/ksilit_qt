@@ -4,7 +4,7 @@
   DATE: 2012-09-04 20:27:47
   DESCRIPTION: This file contains implementation of Jot class
 *******************************************************************************/
-#define JOT_DBG_LVL     0
+#define JOT_DBG_LVL     3
 #define JOT_DBG_OPTIONS DBG_W+DBG_E+DBG_S+DBG_R
 
 #define MODULE_DBG_LVL     JOT_DBG_LVL
@@ -15,6 +15,8 @@
 
 Jot::Jot(Jot *parent)
 {
+  QVector<QVariant> data(1);
+  columnData = data;
   parentJot = parent;
 }
 
@@ -46,4 +48,38 @@ int Jot::columnCount() const {
   DBGS(PRINT_START());
   DBGR(PRINT_RETURN("child column: %i", columnData.count()));
   return columnData.count();
+}
+
+/*******************************************************************************
+  NAME: insertChildren
+  DESCRIPTION: inserting new children to the current Jot
+  ARGUMENTS:
+  Input:
+    int position - position for inserting
+    int count - amount of children
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool Jot::insertChildren(int position, int count) {
+  DBGS(PRINT_START("position: %i, count: %i", position, count));
+
+  bool success = false;
+  int childrenCount = children.count();
+  DBG3(PRINT_DBG("childrenCount: %i", childrenCount));
+
+  if (position >= 0 && position <= childrenCount) {
+    for (int i = 0; i < count; ++i) {
+      Jot *newJot = new Jot(this);
+      children.insert(position, newJot);
+    }
+    success = true;
+  }
+  else {
+    DBGE(PRINT_ERROR("position is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
 }
