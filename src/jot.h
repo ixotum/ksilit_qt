@@ -21,6 +21,8 @@ public:
   int columnCount() const;
   bool insertChildren(int position, int count);
   bool insertColumn(int position, int count);
+  QVariant getColumnData(int column) const;
+  bool setColumnData(int column, QVariant value);
 
 private:
   Jot *parentJot;

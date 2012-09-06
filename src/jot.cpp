@@ -121,3 +121,61 @@ bool Jot::insertColumn(int position, int count) {
   DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
   return success;
 }
+
+/*******************************************************************************
+  NAME: getColumnData
+  DESCRIPTION: getting data from the specified column
+  ARGUMENTS:
+  Input:
+    int column - column for getting data
+  Output:
+    void
+  RETURN VALUE:
+    QVariant - returned data
+*******************************************************************************/
+QVariant Jot::getColumnData(int column) const {
+  DBGS(PRINT_START("column: %i", column));
+
+  QVariant data = 0;
+  int columnNumber = columnCount();
+
+  if (column >= 0 && column <= columnNumber) {
+    data = columnData.value(column);
+  }
+  else {
+    DBGE(PRINT_ERROR("column number is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("data: %i", data.toInt()));
+  return data;
+}
+
+/*******************************************************************************
+  NAME: setColumnData
+  DESCRIPTION: setting data from the value to the specified column
+  ARGUMENTS:
+  Input:
+    int column - column for setting data
+    QVariant value - value
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool Jot::setColumnData(int column, QVariant value) {
+  DBGS(PRINT_START("column: %i, value: %i", column, value.toInt()));
+
+  bool success = false;
+  int columnNumber = columnCount();
+
+  if (column >= 0 && column <= columnNumber) {
+    columnData.insert(column, value);
+    success = true;
+  }
+  else {
+    DBGE(PRINT_ERROR("column number is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
+}

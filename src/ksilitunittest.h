@@ -21,6 +21,7 @@ private slots:
   void jotParent();
   void jotInsertChildren();
   void jotInsertColumn();
+  void jotSetColumnData();
 };
 
 #endif // KSILITUNITTEST_H

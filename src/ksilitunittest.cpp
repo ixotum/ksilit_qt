@@ -54,3 +54,19 @@ void KsilitUnitTest::jotInsertColumn() {
   columnCount = jot->columnCount();
   QCOMPARE(columnCount, 2);
 }
+
+void KsilitUnitTest::jotSetColumnData() {
+  bool success = false;
+  QVariant columnData = 0;
+  Jot *jot = new Jot;
+
+  columnData = jot->getColumnData(0);
+  QCOMPARE(columnData.toInt(), 0);
+
+  columnData = 1;
+  success = jot->setColumnData(0, columnData);
+  QCOMPARE(success, true);
+
+  columnData = jot->getColumnData(0);
+  QCOMPARE(columnData.toInt(), 1);
+}
