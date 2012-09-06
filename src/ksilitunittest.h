@@ -20,7 +20,7 @@ public:
 private slots:
   void jotParent();
   void jotInsertChildren();
-  void jotColumnCount();
+  void jotInsertColumn();
 };
 
 #endif // KSILITUNITTEST_H

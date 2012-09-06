@@ -20,6 +20,7 @@ public:
   int childCount() const;
   int columnCount() const;
   bool insertChildren(int position, int count);
+  bool insertColumn(int position, int count);
 
 private:
   Jot *parentJot;

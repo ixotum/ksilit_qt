@@ -40,10 +40,17 @@ void KsilitUnitTest::jotInsertChildren() {
   QCOMPARE(childCount, 1);
 }
 
-void KsilitUnitTest::jotColumnCount() {
+void KsilitUnitTest::jotInsertColumn() {
   int columnCount = 0;
+  bool success = false;
   Jot *jot = new Jot;
 
   columnCount = jot->columnCount();
   QCOMPARE(columnCount, 1);
+
+  success = jot->insertColumn(0, 1);
+  QCOMPARE(success, true);
+
+  columnCount = jot->columnCount();
+  QCOMPARE(columnCount, 2);
 }

@@ -66,7 +66,7 @@ bool Jot::insertChildren(int position, int count) {
   DBGS(PRINT_START("position: %i, count: %i", position, count));
 
   bool success = false;
-  int childrenCount = children.count();
+  int childrenCount = childCount();
   DBG3(PRINT_DBG("childrenCount: %i", childrenCount));
 
   if (position >= 0 && position <= childrenCount) {
@@ -74,6 +74,44 @@ bool Jot::insertChildren(int position, int count) {
       Jot *newJot = new Jot(this);
       children.insert(position, newJot);
     }
+    success = true;
+  }
+  else {
+    DBGE(PRINT_ERROR("position is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
+}
+
+/*******************************************************************************
+  NAME: insertColumn
+  DESCRIPTION: inserting new columns to the specified position
+  ARGUMENTS:
+  Input:
+    int position - position for inserting
+    int count - amount of columns
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool Jot::insertColumn(int position, int count) {
+  DBGS(PRINT_START("position: %i, count: %i", position, count));
+
+  bool success = false;
+  int columnNumber = columnCount();
+
+  if (position >= 0 && position <= columnNumber) {
+    for (int i = 0; i < count; ++i) {
+      QVariant newColumn;
+      columnData.insert(position, newColumn);
+    }
+
+    foreach (Jot *jotItem, children) {
+      jotItem->insertColumn(position, count);
+    }
+
     success = true;
   }
   else {
