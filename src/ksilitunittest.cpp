@@ -7,15 +7,17 @@
 *******************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QModelIndex>
 
 #include "ksilitunittest.h"
 #include "jot.h"
+#include "jottermodel.h"
 
 KsilitUnitTest::KsilitUnitTest()
 {
 }
 
-void KsilitUnitTest::jotParent() {
+void KsilitUnitTest::jot_parent() {
   Jot *jot = new Jot;
   Jot *parent = jot->parent();
   QVERIFY(!parent);
@@ -25,7 +27,7 @@ void KsilitUnitTest::jotParent() {
   QVERIFY(parent2);
 }
 
-void KsilitUnitTest::jotInsertChildren() {
+void KsilitUnitTest::jot_insertChildren() {
   int childCount = 0;
   bool success = false;
   Jot *jot = new Jot;
@@ -40,7 +42,7 @@ void KsilitUnitTest::jotInsertChildren() {
   QCOMPARE(childCount, 1);
 }
 
-void KsilitUnitTest::jotInsertColumn() {
+void KsilitUnitTest::jot_insertColumn() {
   int columnCount = 0;
   bool success = false;
   Jot *jot = new Jot;
@@ -55,7 +57,7 @@ void KsilitUnitTest::jotInsertColumn() {
   QCOMPARE(columnCount, 2);
 }
 
-void KsilitUnitTest::jotSetColumnData() {
+void KsilitUnitTest::jot_setColumnData() {
   bool success = false;
   QVariant columnData = 0;
   Jot *jot = new Jot;
@@ -69,4 +71,20 @@ void KsilitUnitTest::jotSetColumnData() {
 
   columnData = jot->getColumnData(0);
   QCOMPARE(columnData.toInt(), 1);
+}
+
+void KsilitUnitTest::jotterModel_insertRows() {
+  QModelIndex indexParent;
+  JotterModel *model = new JotterModel;
+  bool success = false;
+
+  int rowCount = 0;
+  rowCount = model->rowCount(indexParent);
+  QCOMPARE(rowCount, 0);
+
+  success = model->insertRow(0, indexParent);
+  QCOMPARE(success, true);
+
+  rowCount = model->rowCount(indexParent);
+  QCOMPARE(rowCount, 1);
 }

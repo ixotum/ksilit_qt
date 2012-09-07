@@ -179,3 +179,23 @@ bool Jot::setColumnData(int column, QVariant value) {
   DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
   return success;
 }
+
+/*******************************************************************************
+  NAME: child
+  DESCRIPTION: Returns found child or 0
+*******************************************************************************/
+Jot *Jot::child(int number) const {
+  DBGS(PRINT_START("number: %i", number));
+
+  Jot *childJot = 0;
+
+  if (number >= 0 && number <= childCount()) {
+    childJot = children.value(number);
+  }
+  else {
+    DBGE(PRINT_ERROR("number of child is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("childJot: 0x%08x", childJot));
+  return childJot;
+}

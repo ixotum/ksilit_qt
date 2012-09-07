@@ -23,6 +23,7 @@ public:
   bool insertColumn(int position, int count);
   QVariant getColumnData(int column) const;
   bool setColumnData(int column, QVariant value);
+  Jot *child(int number) const;
 
 private:
   Jot *parentJot;

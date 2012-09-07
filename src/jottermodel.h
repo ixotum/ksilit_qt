@@ -9,6 +9,8 @@
 
 #include <QAbstractItemModel>
 
+#include "jot.h"
+
 class JotterModel : public QAbstractItemModel
 {
 public:
@@ -18,6 +20,12 @@ public:
   int rowCount(const QModelIndex &parent) const;
   int columnCount(const QModelIndex &parent) const;
   QVariant data(const QModelIndex &index, int role) const;
+  bool insertRows(int row, int count, const QModelIndex &parent);
+
+private:
+  Jot *getJot(const QModelIndex &index) const;
+
+  Jot *rootJot;
 };
 
 #endif // JOTTERMODEL_H

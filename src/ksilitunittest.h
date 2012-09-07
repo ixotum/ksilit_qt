@@ -18,10 +18,11 @@ public:
   KsilitUnitTest();
 
 private slots:
-  void jotParent();
-  void jotInsertChildren();
-  void jotInsertColumn();
-  void jotSetColumnData();
+  void jot_parent();
+  void jot_insertChildren();
+  void jot_insertColumn();
+  void jot_setColumnData();
+  void jotterModel_insertRows();
 };
 
 #endif // KSILITUNITTEST_H
