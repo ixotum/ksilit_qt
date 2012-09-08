@@ -23,6 +23,7 @@ private slots:
   void jot_insertColumn();
   void jot_setColumnData();
   void jotterModel_insertRows();
+  void jotterModel_insertColumns();
 };
 
 #endif // KSILITUNITTEST_H

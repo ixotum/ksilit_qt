@@ -21,6 +21,7 @@ public:
   int columnCount(const QModelIndex &parent) const;
   QVariant data(const QModelIndex &index, int role) const;
   bool insertRows(int row, int count, const QModelIndex &parent);
+  bool insertColumns(int column, int count, const QModelIndex &parent);
 
 private:
   Jot *getJot(const QModelIndex &index) const;

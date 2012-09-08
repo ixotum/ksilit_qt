@@ -78,13 +78,28 @@ void KsilitUnitTest::jotterModel_insertRows() {
   JotterModel *model = new JotterModel;
   bool success = false;
 
-  int rowCount = 0;
-  rowCount = model->rowCount(indexParent);
-  QCOMPARE(rowCount, 0);
+  int rowNumber = 0;
+  rowNumber = model->rowCount(indexParent);
+  QCOMPARE(rowNumber, 0);
 
   success = model->insertRow(0, indexParent);
   QCOMPARE(success, true);
 
-  rowCount = model->rowCount(indexParent);
-  QCOMPARE(rowCount, 1);
+  rowNumber = model->rowCount(indexParent);
+  QCOMPARE(rowNumber, 1);
+}
+
+void KsilitUnitTest::jotterModel_insertColumns() {
+  QModelIndex indexParent;
+  JotterModel *model = new JotterModel;
+  bool success = false;
+
+  int columnNumber = model->columnCount(indexParent);
+  QCOMPARE(columnNumber, 1);
+
+  success = model->insertColumn(0);
+  QCOMPARE(success, true);
+
+  columnNumber = model->columnCount(indexParent);
+  QCOMPARE(columnNumber, 2);
 }

@@ -82,8 +82,25 @@ int JotterModel::rowCount(const QModelIndex &parent) const {
   return rowNumber;
 }
 
+/*******************************************************************************
+  NAME: columnCount
+  DESCRIPTION: Getting column count from the specified parent index
+*******************************************************************************/
 int JotterModel::columnCount(const QModelIndex &parent) const {
-  //dummy
+  DBGS(PRINT_START("parent: 0x%08x", &parent));
+
+  int columnNumber = 0;
+  Jot *parentJot = getJot(parent);
+
+  if (parentJot) {
+    columnNumber = parentJot->columnCount();
+  }
+  else {
+    DBGE(PRINT_ERROR("parentJot not found!"));
+  }
+
+  DBGR(PRINT_RETURN("columnNumber: %i", columnNumber));
+  return columnNumber;
 }
 
 QVariant JotterModel::data(const QModelIndex &index, int role) const {
@@ -144,11 +161,41 @@ bool JotterModel::insertRows(int row, int count, const QModelIndex &parent) {
     endInsertRows();
 
     if (!success) {
-      DBGE(PRINT_ERROR("can't insert new jot!"));
+      DBGE(PRINT_ERROR("error inserting new children!"));
     }
   }
   else {
     DBGE(PRINT_ERROR("parentJot with index: 0x%08x not found!", &parent));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
+}
+
+/*******************************************************************************
+  NAME: insertColumns
+  DESCRIPTION: insert columns to the rootJot recursively to the all children
+  ARGUMENTS:
+  Input:
+    int column - position to inserting
+    int count - amount of columns
+    const QModelIndex &parent - parent index, but as fact will be use rootJot
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool JotterModel::insertColumns(int column, int count, const QModelIndex &parent) {
+  DBGS(PRINT_START("column: %i, count: %i, parent: 0x%08x", column, count, &parent));
+
+  bool success = false;
+
+  beginInsertColumns(parent, column, column + count - 1);
+  success = rootJot->insertColumn(column, count);
+  endInsertColumns();
+
+  if (!success) {
+    DBGE(PRINT_ERROR("error inserting new columns!"));
   }
 
   DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
