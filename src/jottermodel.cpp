@@ -57,8 +57,50 @@ QModelIndex JotterModel::index(int row, int column, const QModelIndex &parent) c
   return index;
 }
 
+/*******************************************************************************
+  NAME: parent
+  DESCRIPTION: Returns parentIndex from child. If child index is invalid or
+    parent index equal to rootJot then returns empty QModelIndex
+*******************************************************************************/
 QModelIndex JotterModel::parent(const QModelIndex &child) const {
-  //dummy
+  DBGS(PRINT_START("child: 0x%08x", &child));
+
+  QModelIndex parentIndex;
+  Jot *childJot = 0;
+  Jot *parentJot = 0;
+  int childRow = 0;
+  int childColumn = 0;
+
+  if (child.isValid()) {
+    childJot = getJot(child);
+
+    if (childJot) {
+      parentJot = childJot->parent();
+
+      if (parentJot) {
+        if (parentJot != rootJot) {
+          childRow = child.row();
+          childColumn = child.column();
+          parentIndex = createIndex(childRow, childColumn, parentJot);
+        }
+        else {
+          DBGW(PRINT_DBG("parentJot equal rootJot! Empty index will be return."));
+        }
+      }
+      else {
+        DBGE(PRINT_ERROR("parentJot is NULL!"));
+      }
+    }
+    else {
+      DBGE(PRINT_ERROR("childJot with index: 0x%08x not found!", &child));
+    }
+  }
+  else {
+    DBGW(PRINT_DBG("Child index is invalid! Emty index will be return."));
+  }
+
+  DBGR(PRINT_RETURN("parentIndex: 0x%08x", &parentIndex));
+  return parentIndex;
 }
 
 /*******************************************************************************

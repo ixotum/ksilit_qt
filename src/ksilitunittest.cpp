@@ -123,3 +123,24 @@ void KsilitUnitTest::jotterModel_setData() {
   QVariant outputValue = model->data(childIndex, Qt::DisplayRole);
   QCOMPARE(outputValue.toInt(), 1);
 }
+
+void KsilitUnitTest::jotterModel_parent() {
+  QModelIndex rootIndex;
+  JotterModel *model = new JotterModel;
+  bool success = false;
+
+  success = model->insertRow(0, rootIndex);
+  QCOMPARE(success, true);
+
+  QModelIndex parentInputIndex = model->index(0, 0, rootIndex);
+  QVERIFY(parentInputIndex.isValid());
+
+  success = model->insertRow(0, parentInputIndex);
+  QCOMPARE(success, true);
+
+  QModelIndex childIndex = model->index(0, 0, parentInputIndex);
+  QVERIFY(childIndex.isValid());
+
+  QModelIndex parentOutputIndex = model->parent(childIndex);
+  QVERIFY(parentInputIndex == parentOutputIndex);
+}
