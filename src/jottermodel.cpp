@@ -103,8 +103,33 @@ int JotterModel::columnCount(const QModelIndex &parent) const {
   return columnNumber;
 }
 
+/*******************************************************************************
+  NAME: data
+  DESCRIPTION: get data from the index
+  ARGUMENTS:
+  Input:
+    QModelIndex &index - reference to the index to getting data
+    int role - must be Qt::DisplayRole
+  Output:
+    void
+  RETURN VALUE:
+    QVariant - got data
+*******************************************************************************/
 QVariant JotterModel::data(const QModelIndex &index, int role) const {
-  //dummy
+  DBGS(PRINT_START("index: 0x%08x, role: %i", &index, role));
+
+  QVariant value;
+  Jot *jot = getJot(index);
+
+  if (jot) {
+    value = jot->getColumnData(index.column());
+  }
+  else {
+    DBGE(PRINT_ERROR("jot with index: 0x%08x not found!", &index));
+  }
+
+  DBGR(PRINT_RETURN("value: 0x%08x", &value));
+  return value;
 }
 
 /*******************************************************************************
@@ -196,6 +221,41 @@ bool JotterModel::insertColumns(int column, int count, const QModelIndex &parent
 
   if (!success) {
     DBGE(PRINT_ERROR("error inserting new columns!"));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
+}
+
+/*******************************************************************************
+  NAME: setData
+  DESCRIPTION: This is inherited function from the QAbstractItemModel class
+  ARGUMENTS:
+  Input:
+    const QModelIndex &index - index where data will be setted
+    const QVariant &value - value which contains data
+    int role - must be Qt::EditRole
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool JotterModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+  DBGS(PRINT_START("index: 0x%08x, value: 0x%08x, role: %i", &index, &value, role));
+
+  bool success = false;
+  Jot *jot = getJot(index);
+
+  if (role == Qt::EditRole) {
+    if (jot) {
+      success = jot->setColumnData(index.column(), value);
+    }
+    else {
+      DBGE(PRINT_ERROR("jot with index: 0x%x not found!", &index));
+    }
+  }
+  else {
+    DBGE(PRINT_ERROR("invalid role!"));
   }
 
   DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));

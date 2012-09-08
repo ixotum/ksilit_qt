@@ -103,3 +103,23 @@ void KsilitUnitTest::jotterModel_insertColumns() {
   columnNumber = model->columnCount(indexParent);
   QCOMPARE(columnNumber, 2);
 }
+
+void KsilitUnitTest::jotterModel_setData() {
+  bool success = false;
+  QModelIndex parentIndex;
+  QModelIndex childIndex;
+  JotterModel *model = new JotterModel;
+
+  success = model->insertRow(0, parentIndex);
+  QCOMPARE(success, true);
+
+  childIndex = model->index(0, 0, parentIndex);
+  QVERIFY(childIndex.isValid());
+
+  QVariant inputValue = "1";
+  success = model->setData(childIndex, inputValue, Qt::EditRole);
+  QCOMPARE(success, true);
+
+  QVariant outputValue = model->data(childIndex, Qt::DisplayRole);
+  QCOMPARE(outputValue.toInt(), 1);
+}
