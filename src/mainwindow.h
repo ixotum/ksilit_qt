@@ -30,6 +30,7 @@ private slots:
 private:
   void allocateActions();
   void createConnections();
+  void setupModel();
 
   Ui::MainWindow *ui;
 

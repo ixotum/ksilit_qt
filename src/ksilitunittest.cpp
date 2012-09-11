@@ -144,3 +144,15 @@ void KsilitUnitTest::jotterModel_parent() {
   QModelIndex parentOutputIndex = model->parent(childIndex);
   QVERIFY(parentInputIndex == parentOutputIndex);
 }
+
+void KsilitUnitTest::jotterModel_setHeader() {
+  JotterModel *model = new JotterModel;
+  QVariant headerInput = "header_data";
+  bool success = false;
+
+  success = model->setHeaderData(0, Qt::Horizontal, headerInput, Qt::EditRole);
+  QCOMPARE(success, true);
+
+  QVariant headerOutput = model->headerData(0, Qt::Horizontal, Qt::DisplayRole);
+  QVERIFY(headerInput == headerOutput);
+}

@@ -23,6 +23,8 @@ public:
   bool insertRows(int row, int count, const QModelIndex &parent);
   bool insertColumns(int column, int count, const QModelIndex &parent);
   bool setData(const QModelIndex &index, const QVariant &value, int role);
+  bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role);
+  QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
 private:
   Jot *getJot(const QModelIndex &index) const;

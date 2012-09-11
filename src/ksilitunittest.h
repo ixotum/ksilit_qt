@@ -26,6 +26,7 @@ private slots:
   void jotterModel_insertColumns();
   void jotterModel_setData();
   void jotterModel_parent();
+  void jotterModel_setHeader();
 };
 
 #endif // KSILITUNITTEST_H

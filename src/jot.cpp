@@ -169,7 +169,7 @@ bool Jot::setColumnData(int column, QVariant value) {
   int columnNumber = columnCount();
 
   if (column >= 0 && column <= columnNumber) {
-    columnData.insert(column, value);
+    columnData[column] = value;
     success = true;
   }
   else {

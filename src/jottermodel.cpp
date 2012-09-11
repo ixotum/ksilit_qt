@@ -161,13 +161,19 @@ QVariant JotterModel::data(const QModelIndex &index, int role) const {
   DBGS(PRINT_START("index: 0x%08x, role: %i", &index, role));
 
   QVariant value;
-  Jot *jot = getJot(index);
 
-  if (jot) {
-    value = jot->getColumnData(index.column());
+  if (role == Qt::EditRole || role == Qt::DisplayRole) {
+    Jot *jot = getJot(index);
+
+    if (jot) {
+      value = jot->getColumnData(index.column());
+    }
+    else {
+      DBGE(PRINT_ERROR("jot with index: 0x%08x not found!", &index));
+    }
   }
   else {
-    DBGE(PRINT_ERROR("jot with index: 0x%08x not found!", &index));
+    DBGE(PRINT_ERROR("Role is invalid!"));
   }
 
   DBGR(PRINT_RETURN("value: 0x%08x", &value));
@@ -302,4 +308,78 @@ bool JotterModel::setData(const QModelIndex &index, const QVariant &value, int r
 
   DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
   return success;
+}
+
+/*******************************************************************************
+  NAME: setHeaderData
+  DESCRIPTION: This is inherited function from the QAbstractItemModel class
+  ARGUMENTS:
+  Input:
+    int section - column in which header will be set
+    Qt::Orientation orientation - horizontal orientation
+    const QVariant &value - value for setting
+    int role - must be Qt::EditRole
+  Output:
+    void
+  RETURN VALUE:
+    bool - true if success
+*******************************************************************************/
+bool JotterModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role) {
+  DBGS(PRINT_START("section: %i, orientation: %i, value: 0x%08x, role: %i", section, orientation, &value, role));
+
+  bool success = false;
+
+  if (orientation == Qt::Horizontal) {
+    if (role == Qt::EditRole) {
+      success = rootJot->setColumnData(section, value);
+
+      if (success) {
+        emit headerDataChanged(orientation, section, section);
+      }
+      else {
+        DBGE(PRINT_ERROR("Error setting root column data!"));
+      }
+    }
+    else {
+      DBGE(PRINT_ERROR("role is invalid!"));
+    }
+  }
+  else {
+    DBGE(PRINT_ERROR("orientation is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("success: %s", success ? "true" : "false"));
+  return success;
+}
+
+/*******************************************************************************
+  NAME: headerData
+  DESCRIPTION: This is inherited function from the QAbstractItemModel class.
+    Returns header data for the specified column
+  ARGUMENTS:
+  Input:
+    int section - column in which header will be set
+    Qt::Orientation orientation - horizontal orientation
+    int role - must be Qt::EditRole
+  Output:
+    void
+  RETURN VALUE:
+    QVariant - returned data
+*******************************************************************************/
+QVariant JotterModel::headerData(int section, Qt::Orientation orientation, int role) const {
+  DBGS(PRINT_START("section: %i, orientation: %i, role: %i", section, orientation, role));
+
+  QVariant headerValue;
+
+  if (orientation == Qt::Horizontal) {
+    if (role == Qt::DisplayRole) {
+      headerValue = rootJot->getColumnData(section);
+    }
+  }
+  else {
+    DBGE(PRINT_ERROR("orientation is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN("headerValue: 0x%08x", &headerValue));
+  return headerValue;
 }

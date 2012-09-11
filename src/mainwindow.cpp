@@ -16,6 +16,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "defines.h"
+#include "jottermodel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   allocateActions();
   createConnections();
+  setupModel();
 }
 
 MainWindow::~MainWindow()
@@ -35,13 +37,6 @@ MainWindow::~MainWindow()
 /*******************************************************************************
   NAME: allocateActions
   DESCRIPTION: Allocating memory for all actions
-  ARGUMENTS:
-  Input:
-    void
-  Output:
-    void
-  RETURN VALUE:
-    void
 *******************************************************************************/
 void MainWindow::allocateActions() {
   DBGS(PRINT_START());
@@ -54,13 +49,6 @@ void MainWindow::allocateActions() {
 /*******************************************************************************
   NAME: createConnections
   DESCRIPTION: Creating connections to the slots
-  ARGUMENTS:
-  Input:
-    void
-  Output:
-    void
-  RETURN VALUE:
-    void
 *******************************************************************************/
 void MainWindow::createConnections() {
   DBGS(PRINT_START("void"));
@@ -74,15 +62,26 @@ void MainWindow::createConnections() {
 }
 
 /*******************************************************************************
+  NAME: setupModel
+  DESCRIPTION: Setup model for jotter tree view
+*******************************************************************************/
+void MainWindow::setupModel() {
+  DBGS(PRINT_START());
+
+  JotterModel *model = new JotterModel;
+  ui->jotterTreeView->setModel(model);
+  QVariant value = KSILIT_JOTTER_COLUMN_NAME_TEXT;
+  bool success = model->setHeaderData(KSILIT_JOTTER_COLUMN_NAME_NUMBER, Qt::Horizontal, value, Qt::EditRole);
+  if (!success) {
+    DBGE(PRINT_ERROR("Error setting jotter's tree view header!"));
+  }
+
+  DBGR(PRINT_RETURN());
+}
+
+/*******************************************************************************
   NAME: jotterMenuRequest
   DESCRIPTION: Creating context menu for the jotter's tree view
-  ARGUMENTS:
-  Input:
-    const QPoint &position - position of the mouse inside jotterTreeView
-  Output:
-    void
-  RETURN VALUE:
-    void
 *******************************************************************************/
 void MainWindow::jotterMenuRequest(const QPoint &position) {
   DBGS(PRINT_START("position x: %i, position y: %i", position.x(), position.y()));
@@ -99,13 +98,6 @@ void MainWindow::jotterMenuRequest(const QPoint &position) {
 /*******************************************************************************
   NAME: ksilitSlotHelpAbout
   DESCRIPTION: Showing Help->About message
-  ARGUMENTS:
-  Input:
-    void
-  Output:
-    void
-  RETURN VALUE:
-    void
 *******************************************************************************/
 void MainWindow::ksilitSlotHelpAbout() {
   DBGS(PRINT_START("void"));
@@ -121,13 +113,6 @@ void MainWindow::ksilitSlotHelpAbout() {
 /*******************************************************************************
   NAME: jotterSlotAddSubNote
   DESCRIPTION: Implementation of adding child to the jotter's tree view slot
-  ARGUMENTS:
-  Input:
-    void
-  Output:
-    void
-  RETURN VALUE:
-    void
 *******************************************************************************/
 void MainWindow::jotterSlotAddSubNote() {
   DBGS(PRINT_START());
