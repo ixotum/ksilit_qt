@@ -116,5 +116,21 @@ void MainWindow::ksilitSlotHelpAbout() {
 *******************************************************************************/
 void MainWindow::jotterSlotAddSubNote() {
   DBGS(PRINT_START());
+
+  QModelIndex selectedIndex = ui->jotterTreeView->selectionModel()->currentIndex();
+  QAbstractItemModel *model = ui->jotterTreeView->model();
+  int childPosition = 0;
+  int childColumn = 0;
+
+  model->insertRow(childPosition, selectedIndex);
+  QModelIndex childIndex = model->index(childPosition, childColumn, selectedIndex);
+  if (childIndex.isValid()) {
+    QVariant subNoteText = KSILIT_JOTTER_SUB_NOTE_TEXT;
+    model->setData(childIndex, subNoteText, Qt::EditRole);
+  }
+  else {
+    DBGE(PRINT_ERROR("childIndex is invalid!"));
+  }
+
   DBGR(PRINT_RETURN());
 }
