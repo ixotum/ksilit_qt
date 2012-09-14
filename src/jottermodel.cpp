@@ -172,8 +172,8 @@ QVariant JotterModel::data(const QModelIndex &index, int role) const {
       DBGE(PRINT_ERROR("jot with index: 0x%08x not found!", &index));
     }
   }
-  else {
-    DBGE(PRINT_ERROR("Role is invalid!"));
+  else { //Often using another roles
+    DBG3(PRINT_DBG("Used role: %i", role));
   }
 
   DBGR(PRINT_RETURN("value: 0x%08x", &value));
@@ -297,6 +297,10 @@ bool JotterModel::setData(const QModelIndex &index, const QVariant &value, int r
   if (role == Qt::EditRole) {
     if (jot) {
       success = jot->setColumnData(index.column(), value);
+
+      if (success) {
+        emit dataChanged(index, index);
+      }
     }
     else {
       DBGE(PRINT_ERROR("jot with index: 0x%x not found!", &index));
@@ -382,4 +386,26 @@ QVariant JotterModel::headerData(int section, Qt::Orientation orientation, int r
 
   DBGR(PRINT_RETURN("headerValue: 0x%08x", &headerValue));
   return headerValue;
+}
+
+/*******************************************************************************
+  NAME: flags
+  DESCRIPTION: This is inherited function from the QAbstractItemModel class.
+    Returns the item flags for the given index.
+  ARGUMENTS:
+  Input:
+    const QModelIndex &index - given index
+  Output:
+    void
+  RETURN VALUE:
+    Qt::ItemFlags - complex of flags
+*******************************************************************************/
+Qt::ItemFlags JotterModel::flags(const QModelIndex &index) const {
+  Qt::ItemFlags flags = 0;
+
+  if (index.isValid()) {
+    flags = Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsEditable;
+  }
+
+  return flags;
 }

@@ -25,6 +25,7 @@ public:
   bool setData(const QModelIndex &index, const QVariant &value, int role);
   bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role);
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+  Qt::ItemFlags flags(const QModelIndex &index) const;
 
 private:
   Jot *getJot(const QModelIndex &index) const;
