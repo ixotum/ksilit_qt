@@ -24,11 +24,17 @@ public:
 
 private slots:
   void ksilitSlotHelpAbout();
+  void jotterMenuRequest(const QPoint &position);
+  void jotterSlotAddSubNote();
 
 private:
+  void allocateActions();
   void createConnections();
+  void setupModel();
 
   Ui::MainWindow *ui;
+
+  QAction *actionJotterAddSubNote;
 };
 
 #endif // MAINWINDOW_H
