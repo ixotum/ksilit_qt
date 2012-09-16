@@ -42,6 +42,7 @@ void MainWindow::allocateActions() {
   DBGS(PRINT_START());
 
   actionJotterAddSubNote = new QAction(KSILIT_JOTTER_ACTION_ADD_SUB_NOTE_TEXT, this);
+  actionJotterAddNote = new QAction(KSILIT_JOTTER_ACTION_ADD_NOTE_TEXT, this);
 
   DBGR(PRINT_RETURN());
 }
@@ -57,6 +58,7 @@ void MainWindow::createConnections() {
   connect(ui->jotterTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(jotterMenuRequest(QPoint)));
 
   connect(actionJotterAddSubNote, SIGNAL(triggered()), this, SLOT(jotterSlotAddSubNote()));
+  connect(actionJotterAddNote, SIGNAL(triggered()), this, SLOT(jotterSlotAddNote()));
 
   DBGR(PRINT_RETURN());
 }
@@ -80,6 +82,20 @@ void MainWindow::setupModel() {
 }
 
 /*******************************************************************************
+  NAME: jotterUpdateActions
+  DESCRIPTION: Updating the states of jotter's actions
+*******************************************************************************/
+void MainWindow::jotterUpdateActions() {
+  DBGS(PRINT_START());
+
+  bool hasSelection = !ui->jotterTreeView->selectionModel()->selection().isEmpty();
+
+  actionJotterAddNote->setEnabled(hasSelection);
+
+  DBGR(PRINT_RETURN());
+}
+
+/*******************************************************************************
   NAME: jotterMenuRequest
   DESCRIPTION: Creating context menu for the jotter's tree view
 *******************************************************************************/
@@ -88,8 +104,10 @@ void MainWindow::jotterMenuRequest(const QPoint &position) {
 
   QMenu jotterContextMenu(this);
 
+  jotterContextMenu.addAction(actionJotterAddNote);
   jotterContextMenu.addAction(actionJotterAddSubNote);
 
+  jotterUpdateActions();
   jotterContextMenu.exec(ui->jotterTreeView->viewport()->mapToGlobal(position));
 
   DBGR(PRINT_RETURN());
@@ -122,14 +140,49 @@ void MainWindow::jotterSlotAddSubNote() {
   int childPosition = 0;
   int childColumn = 0;
 
+  childPosition = model->rowCount(selectedIndex);
   model->insertRow(childPosition, selectedIndex);
+
   QModelIndex childIndex = model->index(childPosition, childColumn, selectedIndex);
   if (childIndex.isValid()) {
     QVariant subNoteText = KSILIT_JOTTER_SUB_NOTE_TEXT;
+    QString postfix;
+    subNoteText = subNoteText.toString() + " "+ postfix.setNum(childPosition);
     model->setData(childIndex, subNoteText, Qt::EditRole);
   }
   else {
     DBGE(PRINT_ERROR("childIndex is invalid!"));
+  }
+
+  DBGR(PRINT_RETURN());
+}
+
+/*******************************************************************************
+  NAME: jotterSlotAddNote
+  DESCRIPTION: Implementation of adding sibling to the current selected jotter's
+    tree view note
+*******************************************************************************/
+void MainWindow::jotterSlotAddNote() {
+  DBGS(PRINT_START());
+
+  QModelIndex selectedIndex = ui->jotterTreeView->selectionModel()->currentIndex();
+  QAbstractItemModel *model = ui->jotterTreeView->model();
+  QModelIndex parentIndex = selectedIndex.parent();
+  int siblingPosition = 0;
+  int columnPosition = 0;
+
+  siblingPosition = model->rowCount(parentIndex);
+  model->insertRow(siblingPosition, parentIndex);
+
+  QModelIndex siblingIndex = model->index(siblingPosition, columnPosition, parentIndex);
+  if (siblingIndex.isValid()) {
+    QVariant noteText = KSILIT_JOTTER_SUB_NOTE_TEXT;
+    QString postfix;
+    noteText = noteText.toString() + " " + postfix.setNum(siblingPosition);
+    model->setData(siblingIndex, noteText, Qt::EditRole);
+  }
+  else {
+    DBGE(PRINT_ERROR("siblingIndex is inavalid!"));
   }
 
   DBGR(PRINT_RETURN());

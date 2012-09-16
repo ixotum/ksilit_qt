@@ -26,15 +26,18 @@ private slots:
   void ksilitSlotHelpAbout();
   void jotterMenuRequest(const QPoint &position);
   void jotterSlotAddSubNote();
+  void jotterSlotAddNote();
 
 private:
   void allocateActions();
   void createConnections();
   void setupModel();
+  void jotterUpdateActions();
 
   Ui::MainWindow *ui;
 
   QAction *actionJotterAddSubNote;
+  QAction *actionJotterAddNote;
 };
 
 #endif // MAINWINDOW_H
