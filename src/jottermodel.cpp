@@ -4,8 +4,8 @@
   DATE: 2012-09-04 20:28:18
   DESCRIPTION: This file contains implementation of JotterModel class
 *******************************************************************************/
-#define JOTTER_MODEL_DBG_LVL     3
-#define JOTTER_MODEL_DBG_OPTIONS DBG_W+DBG_E+DBG_S+DBG_R
+#define JOTTER_MODEL_DBG_LVL     0
+#define JOTTER_MODEL_DBG_OPTIONS DBG_W+DBG_E//+DBG_S+DBG_R
 
 #define MODULE_DBG_LVL     JOTTER_MODEL_DBG_LVL
 #define MODULE_DBG_OPTIONS JOTTER_MODEL_DBG_OPTIONS
@@ -15,7 +15,9 @@
 
 JotterModel::JotterModel()
 {
-  rootJot = new Jot;
+  jotCounter = 0;
+  rootJot = new Jot(0);
+  domDocument = new QDomDocument;
 }
 
 /*******************************************************************************
@@ -82,9 +84,6 @@ QModelIndex JotterModel::parent(const QModelIndex &child) const {
           childRow = child.row();
           childColumn = child.column();
           parentIndex = createIndex(childRow, childColumn, parentJot);
-        }
-        else {
-          DBGW(PRINT_DBG("parentJot equal rootJot! Empty index will be return."));
         }
       }
       else {
@@ -226,11 +225,14 @@ bool JotterModel::insertRows(int row, int count, const QModelIndex &parent) {
 
   bool success = false;
   Jot *parentJot = 0;
+  int jotId = 0;
 
   parentJot = getJot(parent);
   if (parentJot) {
+    incJotCounter();
+    jotId = getJotCounter();
     beginInsertRows(parent, row, row + count -1);
-    success = parentJot->insertChildren(row, count);
+    success = parentJot->insertChildren(jotId, row, count);
     endInsertRows();
 
     if (!success) {
@@ -408,4 +410,22 @@ Qt::ItemFlags JotterModel::flags(const QModelIndex &index) const {
   }
 
   return flags;
+}
+
+void JotterModel::updateDomDocument() {
+  domDocument->clear();
+  rootJot->updateDOM(domDocument);
+}
+
+QDomDocument *JotterModel::getDomDocument() {
+  updateDomDocument();
+  return domDocument;
+}
+
+int JotterModel::getJotCounter() {
+  return jotCounter;
+}
+
+void JotterModel::incJotCounter() {
+  ++jotCounter;
 }

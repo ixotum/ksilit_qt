@@ -8,6 +8,7 @@
 #define JOTTERMODEL_H
 
 #include <QAbstractItemModel>
+#include <QtXml/QDomDocument>
 
 #include "jot.h"
 
@@ -26,11 +27,17 @@ public:
   bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role);
   QVariant headerData(int section, Qt::Orientation orientation, int role) const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
+  QDomDocument *getDomDocument();
 
 private:
   Jot *getJot(const QModelIndex &index) const;
+  void updateDomDocument();
+  int getJotCounter();
+  void incJotCounter();
 
+  int jotCounter;
   Jot *rootJot;
+  QDomDocument *domDocument;
 };
 
 #endif // JOTTERMODEL_H

@@ -22,11 +22,13 @@ private slots:
   void jot_insertChildren();
   void jot_insertColumn();
   void jot_setColumnData();
+  void jot_getId();
   void jotterModel_insertRows();
   void jotterModel_insertColumns();
   void jotterModel_setData();
   void jotterModel_parent();
   void jotterModel_setHeader();
+  void jotterModel_selfTestDomDocument();
 };
 
 #endif // KSILITUNITTEST_H
