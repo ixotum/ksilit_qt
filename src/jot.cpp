@@ -4,17 +4,19 @@
   DATE: 2012-09-04 20:27:47
   DESCRIPTION: This file contains implementation of Jot class
 *******************************************************************************/
-#define JOT_DBG_LVL     3
-#define JOT_DBG_OPTIONS DBG_W+DBG_E+DBG_S+DBG_R
+#define JOT_DBG_LVL     0
+#define JOT_DBG_OPTIONS DBG_W+DBG_E//+DBG_S+DBG_R
 
 #define MODULE_DBG_LVL     JOT_DBG_LVL
 #define MODULE_DBG_OPTIONS JOT_DBG_OPTIONS
 #include "dbg.h"
 
 #include "jot.h"
+#include "defines.h"
 
-Jot::Jot(Jot *parent)
+Jot::Jot(int jotId, Jot *parent)
 {
+  id = jotId;
   QVector<QVariant> data(1);
   columnData = data;
   parentJot = parent;
@@ -62,7 +64,7 @@ int Jot::columnCount() const {
   RETURN VALUE:
     bool - true if success
 *******************************************************************************/
-bool Jot::insertChildren(int position, int count) {
+bool Jot::insertChildren(int jotId, int position, int count) {
   DBGS(PRINT_START("position: %i, count: %i", position, count));
 
   bool success = false;
@@ -71,7 +73,7 @@ bool Jot::insertChildren(int position, int count) {
 
   if (position >= 0 && position <= childrenCount) {
     for (int i = 0; i < count; ++i) {
-      Jot *newJot = new Jot(this);
+      Jot *newJot = new Jot(jotId, this);
       children.insert(position, newJot);
     }
     success = true;
@@ -198,4 +200,65 @@ Jot *Jot::child(int number) const {
 
   DBGR(PRINT_RETURN("childJot: 0x%08x", childJot));
   return childJot;
+}
+
+int Jot::getId() {
+  return id;
+}
+
+void Jot::updateDOM(QDomDocument *domDocument) {
+  DBGS(PRINT_START("domDocument: 0x%08x", domDocument));
+
+  Jot *parentJot = parent();
+
+  if (parentJot) {
+    int parentId = parentJot->getId();
+    QString parentStringId = QString::number(parentId);
+    QString parentDomElementName = KSILIT_JOTTER_DOM_ELEMENT_TAG + parentStringId;
+    QDomNodeList nodeList = domDocument->elementsByTagName(parentDomElementName);
+
+    if (!nodeList.isEmpty()){
+      if (nodeList.length() == 1) {
+        QDomNode parentNode = nodeList.at(0);
+        QDomElement parentElement = parentNode.toElement();
+
+        if (parentElement.isNull() != true) {
+          QString parentTagName = parentElement.tagName();
+          DBG2(PRINT_DBG("tagName: %s", qPrintable(parentTagName)));
+
+          int id = getId();
+          QString stringId = QString::number(id);
+          QString elementName = KSILIT_JOTTER_DOM_ELEMENT_TAG + stringId;
+          QDomElement childElement = domDocument->createElement(elementName);
+          childElement.setAttribute(KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_ID, id);
+          QString name = columnData[KSILIT_JOTTER_COLUMN_NAME_NUMBER].toString();
+          childElement.setAttribute(KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_NAME, name);
+
+          parentElement.appendChild(childElement);
+        }
+        else {
+          DBGE(PRINT_ERROR("Can't convert parentNode to parentElement!"));
+        }
+      }
+      else {
+        DBGE(PRINT_ERROR("Multiple definition of parent element id!"));
+      }
+    }
+    else {
+      DBGE(PRINT_ERROR("parentElement not found!"));
+    }
+  }
+  else {//The current jot is root
+    int id = getId();
+    QString stringId = QString::number(id);
+    QString elementName = KSILIT_JOTTER_DOM_ELEMENT_TAG + stringId;
+    QDomElement rootElement = domDocument->createElement(elementName);
+    domDocument->appendChild(rootElement);
+  }
+
+  foreach (Jot *jot, children) {
+    jot->updateDOM(domDocument);
+  }
+
+  DBGR(PRINT_RETURN());
 }

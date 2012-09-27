@@ -24,6 +24,7 @@ public:
 
 private slots:
   void ksilitSlotHelpAbout();
+  void ksilitSlotFileSaveAs();
   void jotterMenuRequest(const QPoint &position);
   void jotterSlotAddSubNote();
   void jotterSlotAddNote();
@@ -33,6 +34,7 @@ private:
   void createConnections();
   void setupModel();
   void jotterUpdateActions();
+  int ksilitDataBaseWrite(QString dataBasePath);
 
   Ui::MainWindow *ui;
 

@@ -11,21 +11,25 @@
 #include <QList>
 #include <QVector>
 #include <QVariant>
+#include <QtXml/QDomDocument>
 
 class Jot
 {
 public:
-  Jot(Jot *parent = 0);
+  Jot(int jotId, Jot *parent = 0);
   Jot *parent() const;
   int childCount() const;
   int columnCount() const;
-  bool insertChildren(int position, int count);
+  bool insertChildren(int jotId, int position, int count);
   bool insertColumn(int position, int count);
   QVariant getColumnData(int column) const;
   bool setColumnData(int column, QVariant value);
   Jot *child(int number) const;
+  void updateDOM(QDomDocument *domDocument);
+  int getId();
 
 private:
+  int id;
   Jot *parentJot;
   QList<Jot *> children;
   QVector<QVariant> columnData;
