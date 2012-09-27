@@ -12,6 +12,8 @@
 #include "dbg.h"
 
 #include <QMessageBox>
+#include <QFileDialog>
+#include <QTextStream>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -55,6 +57,7 @@ void MainWindow::createConnections() {
   DBGS(PRINT_START("void"));
 
   connect(ui->action_About, SIGNAL(triggered()), this, SLOT(ksilitSlotHelpAbout()));
+  connect(ui->actionSave_As, SIGNAL(triggered()), this, SLOT(ksilitSlotFileSaveAs()));
   connect(ui->jotterTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(jotterMenuRequest(QPoint)));
 
   connect(actionJotterAddSubNote, SIGNAL(triggered()), this, SLOT(jotterSlotAddSubNote()));
@@ -124,6 +127,73 @@ void MainWindow::ksilitSlotHelpAbout() {
 
   mBox.setText(QString("ksilit: ") + KSILIT_VERSION);
   mBox.exec();
+
+  DBGR(PRINT_RETURN());
+}
+
+int MainWindow::ksilitDataBaseWrite(QString dataBasePath) {
+  DBGS(PRINT_START("dataBasePath: %s", qPrintable(dataBasePath)));
+
+  int rv = ERROR_UNKNOWN_ERROR;
+  JotterModel *model = static_cast<JotterModel *>(ui->jotterTreeView->model());
+  QDomDocument *domDoc = model->getDomDocument();
+  QDomElement rootElement = domDoc->firstChildElement();
+
+  if (!rootElement.isNull()) {
+    QString xmlString = domDoc->toString();
+
+    if (!xmlString.isNull()) {
+      QFile fileOut(dataBasePath);
+
+      if (fileOut.open(QIODevice::WriteOnly)) {
+        QTextStream outStream(&fileOut);
+        outStream << xmlString;
+        fileOut.close();
+        rv = ALL_OK;
+      }
+      else {
+        DBGE(PRINT_ERROR("Error opening data base: %s!", qPrintable(dataBasePath)));
+        rv = ERROR_OPENING_FILE;
+      }
+    }
+    else {
+      DBGE(PRINT_ERROR("xmlString is empty!"))
+    }
+  }
+  else {
+    DBGE(PRINT_ERROR("The root element of the model is empty!"));
+  }
+
+  DBGR(PRINT_RETURN("rv: %i", rv));
+  return rv;
+}
+
+void MainWindow::ksilitSlotFileSaveAs() {
+  DBGS(PRINT_START());
+
+  int rv = ERROR_UNKNOWN_ERROR;
+
+  QFileDialog fileDialog;
+  fileDialog.setAcceptMode(QFileDialog::AcceptSave);
+  fileDialog.setNameFilter(KSILIT_DEFAULT_DATA_BASE_FILTER);
+  fileDialog.setDefaultSuffix(KSILIT_DEFAULT_DATA_BASE_SUFFIX);
+  fileDialog.selectFile(KSILIT_DEFAULT_DATA_BASE_NAME);
+
+  if (fileDialog.exec()) {
+    QStringList fileList = fileDialog.selectedFiles();
+
+    if (!fileList.isEmpty()) {
+      QString dataBasePath = fileList.at(0);
+      rv = ksilitDataBaseWrite(dataBasePath);
+
+      if (rv) {
+        DBGE(PRINT_ERROR("Error writing ksilit data base!"));
+      }
+    }
+    else {
+      DBGW(PRINT_DBG("fileList is empty!"));
+    }
+  }
 
   DBGR(PRINT_RETURN());
 }

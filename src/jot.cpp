@@ -230,6 +230,10 @@ void Jot::updateDOM(QDomDocument *domDocument) {
           QString stringId = QString::number(id);
           QString elementName = KSILIT_JOTTER_DOM_ELEMENT_TAG + stringId;
           QDomElement childElement = domDocument->createElement(elementName);
+          childElement.setAttribute(KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_ID, id);
+          QString name = columnData[KSILIT_JOTTER_COLUMN_NAME_NUMBER].toString();
+          childElement.setAttribute(KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_NAME, name);
+
           parentElement.appendChild(childElement);
         }
         else {

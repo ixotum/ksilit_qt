@@ -200,7 +200,7 @@ void KsilitUnitTest::jotterModel_selfTestDomDocument() {
   QDomElement domElementOut = domDocOut->firstChildElement();
   QVERIFY(domElementOut.isNull() != true);
 
-  QString xmlStringOut = domDocOut->toString(2);
+  QString xmlStringOut = domDocOut->toString();
   QVERIFY(!xmlStringOut.isEmpty());
 
   QString fileName = "test_file";
