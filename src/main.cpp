@@ -1,55 +1,24 @@
-/*******************************************************************************
-  FILE: main.cpp
-  AUTOR: ixotum
-  DATE: 2012-08-18 14:25:59
-  DESCRIPTION: This file contains main function
-*******************************************************************************/
+#define MAIN_DBG_LVL 0
+#define MAIN_DBG_OPTIONS DBG_W+DBG_E+DBG_S+DBG_R
 
-#define MAIN_DBG_LVL     0
-#define MAIN_DBG_OPTIONS DBG_W+DBG_E//+DBG_S+DBG_R
-
-#define MODULE_DBG_LVL     MAIN_DBG_LVL
+#define MODULE_DBG_LVL MAIN_DBG_LVL
 #define MODULE_DBG_OPTIONS MAIN_DBG_OPTIONS
 #include "dbg.h"
 
-#include <QtGui/QApplication>
 #include <QtTest/QtTest>
+#include <QtGui/QApplication>
 
-#include "mainwindow.h"
 #include "ksilitunittest.h"
+#include "mainwindow.h"
 
-/*******************************************************************************
-  NAME: unitTestProcess
-  DESCRIPTION: Function for launching unit tests mechanism
-  ARGUMENTS:
-  Input:
-    void
-  Output:
-    int
-  RETURN VALUE:
-    0 - if successful
-    another value - tests fail
-*******************************************************************************/
 int unitTestProcess() {
   int rv = QTest::qExec(new KsilitUnitTest);
 
   return rv;
 }
 
-/*******************************************************************************
-  NAME: main
-  DESCRIPTION: The main function.
-  ARGUMENTS:
-  Input:
-    int argc
-    char *argv[]
-  Output:
-    int
-  RETURN VALUE:
-    0 - if successful
-*******************************************************************************/
 int main(int argc, char *argv[]) {
-  DBGS(PRINT_START("void"));
+  DBGS(PRINT_START());
 
   int rv = 0;
 
@@ -63,9 +32,9 @@ int main(int argc, char *argv[]) {
     a.exec();
   }
   else {
-    DBGE(PRINT_ERROR("Unit stets fail!"));
+    DBGE(PRINT_ERROR("Unit tests fail!"));
   }
 
-  DBGR(PRINT_RETURN("ksilit terminated."));
+  DBGR(PRINT_RETURN("rv: %i", rv));
   return rv;
 }

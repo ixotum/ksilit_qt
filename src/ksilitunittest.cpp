@@ -1,240 +1,151 @@
-/*******************************************************************************
-  FILE: ksilitunittest.cpp
-  AUTOR: ixotum
-  DATE: 2012-08-19 15:19:56
-  DESCRIPTION: Implementation of KsilitUnitTest class corresponded for unit
-    testing
-*******************************************************************************/
-
 #include <QtTest/QtTest>
-#include <QModelIndex>
-#include <QtXml/QDomDocument>
-#include <QMessageBox>
+#include <QStandardItem>
 
 #include "ksilitunittest.h"
 #include "jot.h"
-#include "jottermodel.h"
-#include "defines.h"
+#include "jotter.h"
+#include "database.h"
 
 KsilitUnitTest::KsilitUnitTest()
 {
 }
 
-void KsilitUnitTest::jot_parent() {
-  Jot *jot = new Jot(0);
-  Jot *parent = jot->parent();
-  QVERIFY(!parent);
+void KsilitUnitTest::jotter_test_jotCounter() {
+  Jotter jotter;
+  int jotNumber = jotter.getJotCount();
+  QCOMPARE(jotNumber, 0);
 
-  Jot *jot2 = new Jot(1, jot);
-  Jot *parent2 = jot2->parent();
-  QVERIFY(parent2);
-}
+  int rv = jotter.setJotCount(1);
+  QCOMPARE(rv, 0);
 
-void KsilitUnitTest::jot_insertChildren() {
-  int childCount = 0;
-  bool success = false;
-  Jot *jot = new Jot(0);
-
-  childCount = jot->childCount();
-  QCOMPARE(childCount, 0);
-
-  success = jot->insertChildren(1, 0, 1);
-  QCOMPARE(success, true);
-
-  childCount = jot->childCount();
-  QCOMPARE(childCount, 1);
-
-  Jot *childJot = jot->child(0);
-  QVERIFY(childJot);
-}
-
-void KsilitUnitTest::jot_insertColumn() {
-  int columnCount = 0;
-  bool success = false;
-  Jot *jot = new Jot(0);
-
-  columnCount = jot->columnCount();
-  QCOMPARE(columnCount, 1);
-
-  success = jot->insertColumn(0, 1);
-  QCOMPARE(success, true);
-
-  columnCount = jot->columnCount();
-  QCOMPARE(columnCount, 2);
-}
-
-void KsilitUnitTest::jot_setColumnData() {
-  bool success = false;
-  QVariant columnData = 0;
-  Jot *jot = new Jot(0);
-
-  columnData = jot->getColumnData(0);
-  QCOMPARE(columnData.toInt(), 0);
-
-  columnData = 1;
-  success = jot->setColumnData(0, columnData);
-  QCOMPARE(success, true);
-
-  columnData = jot->getColumnData(0);
-  QCOMPARE(columnData.toInt(), 1);
-}
-
-void KsilitUnitTest::jot_getId() {
-  Jot *parentJot = new Jot(0);
-  int id = parentJot->getId();
-  QCOMPARE(id, 0);
-
-  bool success = parentJot->insertChildren(1, 0, 1);
-  QVERIFY(success);
-
-  Jot *childJot = parentJot->child(0);
-  id = childJot->getId();
+  int id = jotter.getJotCount();
   QCOMPARE(id, 1);
 }
 
-void KsilitUnitTest::jotterModel_insertRows() {
-  QModelIndex indexParent;
-  JotterModel *model = new JotterModel;
-  bool success = false;
+void KsilitUnitTest::jot_test_name_field() {
+  Jot *jot = new Jot();
+  QVERIFY(jot);
 
-  int rowNumber = 0;
-  rowNumber = model->rowCount(indexParent);
-  QCOMPARE(rowNumber, 0);
+  QString name = jot->getName();
+  QVERIFY(name.isEmpty());
 
-  success = model->insertRow(0, indexParent);
-  QCOMPARE(success, true);
-
-  rowNumber = model->rowCount(indexParent);
-  QCOMPARE(rowNumber, 1);
+  QString setName = "test name";
+  jot->setName(setName);
+  QString getName = jot->getName();
+  QCOMPARE(setName, getName);
 }
 
-void KsilitUnitTest::jotterModel_insertColumns() {
-  QModelIndex indexParent;
-  JotterModel *model = new JotterModel;
-  bool success = false;
+void KsilitUnitTest::jot_test_text() {
+  Jot *jot = new Jot();
+  QString text = jot->getText();
+  QVERIFY(text.isEmpty());
 
-  int columnNumber = model->columnCount(indexParent);
-  QCOMPARE(columnNumber, 1);
-
-  success = model->insertColumn(0);
-  QCOMPARE(success, true);
-
-  columnNumber = model->columnCount(indexParent);
-  QCOMPARE(columnNumber, 2);
+  text = "test text";
+  jot->setText(text);
+  QString getText = jot->getText();
+  QCOMPARE(text, getText);
 }
 
-void KsilitUnitTest::jotterModel_setData() {
-  bool success = false;
-  QModelIndex parentIndex;
-  QModelIndex childIndex;
-  JotterModel *model = new JotterModel;
+void KsilitUnitTest::jotter_test_jot_creating() {
+  Jotter jotter;
+  int id = jotter.createJot();
+  QCOMPARE(id, 1);
 
-  success = model->insertRow(0, parentIndex);
-  QCOMPARE(success, true);
+  QString name = jotter.getName(id);
+  QVERIFY(name.isEmpty());
 
-  childIndex = model->index(0, 0, parentIndex);
-  QVERIFY(childIndex.isValid());
+  QString setName = "test name";
+  int rv = jotter.setName(id, setName);
+  QCOMPARE(rv, 0);
 
-  QVariant inputValue = "1";
-  success = model->setData(childIndex, inputValue, Qt::EditRole);
-  QCOMPARE(success, true);
-
-  QVariant outputValue = model->data(childIndex, Qt::DisplayRole);
-  QCOMPARE(outputValue.toInt(), 1);
+  QString getName = jotter.getName(id);
+  QCOMPARE(setName, getName);
 }
 
-void KsilitUnitTest::jotterModel_parent() {
-  QModelIndex rootIndex;
-  JotterModel *model = new JotterModel;
-  bool success = false;
+void KsilitUnitTest::database_test_write() {
+  DataBase dataBaseWrite;
+  QStandardItem *rootItem = new QStandardItem();
+  Jotter *jotter = new Jotter();
 
-  success = model->insertRow(0, rootIndex);
-  QCOMPARE(success, true);
+  dataBaseWrite.setRootItem(rootItem);
+  dataBaseWrite.setJotter(jotter);
 
-  QModelIndex parentInputIndex = model->index(0, 0, rootIndex);
-  QVERIFY(parentInputIndex.isValid());
+  //Add item1 to the root item
+  QStandardItem *item1 = new QStandardItem();
+  rootItem->appendRow(item1);
 
-  success = model->insertRow(0, parentInputIndex);
-  QCOMPARE(success, true);
+  int id1 = jotter->createJot();
+  QVariant itemData1 = id1;
+  item1->setData(itemData1);
 
-  QModelIndex childIndex = model->index(0, 0, parentInputIndex);
-  QVERIFY(childIndex.isValid());
+  QString itemName1 = "name1";
+  jotter->setName(id1, itemName1);
 
-  QModelIndex parentOutputIndex = model->parent(childIndex);
-  QVERIFY(parentInputIndex == parentOutputIndex);
+  //Add item2 to the root item
+  QStandardItem *item2 = new QStandardItem();
+  rootItem->appendRow(item2);
+
+  int id2 = jotter->createJot();
+  QVariant itemData2 = id2;
+  item2->setData(itemData2);
+
+  QString itemName2 = "name2";
+  jotter->setName(id2, itemName2);
+
+  //Add item3 to the root item1
+  QStandardItem *item3 = new QStandardItem();
+  item1->appendRow(item3);
+
+  int id3 = jotter->createJot();
+  QVariant itemData3 = id3;
+  item3->setData(itemData3);
+
+  QString itemName3 = "name3";
+  jotter->setName(id3, itemName3);
+
+  QString fileName = "test file";
+  int rv = dataBaseWrite.write(fileName);
+  QCOMPARE(rv, 0);
 }
 
-void KsilitUnitTest::jotterModel_setHeader() {
-  JotterModel *model = new JotterModel;
-  QVariant headerInput = "header_data";
-  bool success = false;
+void KsilitUnitTest::database_test_read() {
+  DataBase dataBaseRead;
+  QString fileName = "test file";
+  int rv = dataBaseRead.read(fileName);
+  QCOMPARE(rv, 0);
 
-  success = model->setHeaderData(0, Qt::Horizontal, headerInput, Qt::EditRole);
-  QCOMPARE(success, true);
+  QFile file(fileName);
+  file.remove();
 
-  QVariant headerOutput = model->headerData(0, Qt::Horizontal, Qt::DisplayRole);
-  QVERIFY(headerInput == headerOutput);
+  QStandardItem *rootItem = dataBaseRead.getRootItem();
+  QVERIFY(rootItem);
+
+  QStandardItem *item1 = rootItem->child(0);
+  QString itemName1 = item1->text();
+  QCOMPARE(itemName1, QString("name1"));
+  int id1 = item1->data().toInt();
+  QCOMPARE(id1, 1);
+
+  QStandardItem *item2 = rootItem->child(1);
+  QString itemName2 = item2->text();
+  QCOMPARE(itemName2, QString("name2"));
+  int id2 = item2->data().toInt();
+  QCOMPARE(id2, 2);
+
+  QStandardItem *item3 = item1->child(0);
+  QString itemName3 = item3->text();
+  QCOMPARE(itemName3, QString("name3"));
+  int id3 = item3->data().toInt();
+  QCOMPARE(id3, 3);
 }
 
-void KsilitUnitTest::jotterModel_selfTestDomDocument() {
-  bool success = false;
-  JotterModel *model = new JotterModel;
-  QModelIndex parentIndex;
-  success = model->insertRow(0, parentIndex);
-  QCOMPARE(success, true);
+void KsilitUnitTest::jotter_test_text() {
+  QString setText = "test text";
+  Jotter jotter;
+  int id = jotter.createJot();
+  int rv = jotter.setText(id, setText);
+  QCOMPARE(rv, 0);
 
-  QModelIndex childIndex;
-  QVERIFY(!childIndex.isValid());
-
-  childIndex = model->index(0, 0, parentIndex);
-  QVERIFY(childIndex.isValid());
-
-  QVariant valueInput = "1";
-  success = model->setData(childIndex, valueInput, Qt::EditRole);
-  QCOMPARE(success, true);
-
-  QVariant valueOutput = model->data(childIndex, Qt::DisplayRole);
-  QCOMPARE(valueInput.toString(), valueOutput.toString());
-
-  QDomDocument *domDocOut = model->getDomDocument();
-  QDomElement domElementOut = domDocOut->firstChildElement();
-  QVERIFY(domElementOut.isNull() != true);
-
-  QString xmlStringOut = domDocOut->toString();
-  QVERIFY(!xmlStringOut.isEmpty());
-
-  QString fileName = "test_file";
-  QFile fileOut;
-  fileOut.setFileName(fileName);
-  success = fileOut.open(QIODevice::WriteOnly);
-  QVERIFY(success);
-
-  QTextStream out;
-  out.setDevice(&fileOut);
-  out << xmlStringOut;
-  fileOut.close();
-
-  QFile fileIn;
-  fileIn.setFileName(fileName);
-  success = fileIn.open(QIODevice::ReadOnly);
-  QVERIFY(success);
-
-  QTextStream in;
-  in.setDevice(&fileIn);
-  QDomDocument domDocIn("myDocIn");
-  QString errorMsg;
-  int errorLine = 0;
-  int errorColumn = 0;
-  success = domDocIn.setContent(&fileIn, &errorMsg, &errorLine, &errorColumn);
-  QVERIFY(success);
-  fileIn.close();
-  fileIn.remove();
-
-  QDomElement domElementIn = domDocIn.documentElement();
-  QVERIFY(domElementIn.isNull() != true);
-
-  QString rootTag = domElementIn.tagName();
-  QString referenceRootTag = KSILIT_JOTTER_DOM_ELEMENT_TAG;
-  referenceRootTag += "0";
-  QCOMPARE(rootTag, referenceRootTag);
+  QString getText = jotter.getText(id);
+  QCOMPARE(setText, getText);
 }

@@ -1,10 +1,3 @@
-/*******************************************************************************
-  FILE: ksilitunittest.h
-  AUTOR: ixotum
-  DATE: 2012-08-19 15:18:54
-  DESCRIPTION: Definition of KsilitUnitTest class corresponded for unit testing
-*******************************************************************************/
-
 #ifndef KSILITUNITTEST_H
 #define KSILITUNITTEST_H
 
@@ -18,17 +11,13 @@ public:
   KsilitUnitTest();
 
 private slots:
-  void jot_parent();
-  void jot_insertChildren();
-  void jot_insertColumn();
-  void jot_setColumnData();
-  void jot_getId();
-  void jotterModel_insertRows();
-  void jotterModel_insertColumns();
-  void jotterModel_setData();
-  void jotterModel_parent();
-  void jotterModel_setHeader();
-  void jotterModel_selfTestDomDocument();
+  void jot_test_name_field();
+  void jot_test_text();
+  void jotter_test_jotCounter();
+  void jotter_test_jot_creating();
+  void jotter_test_text();
+  void database_test_write();
+  void database_test_read();
 };
 
 #endif // KSILITUNITTEST_H
