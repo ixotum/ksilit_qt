@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define KSILIT_VERSION                  "0.0.23"
+#define KSILIT_VERSION                  "0.1.0"
 #define KSILIT_ORGANIZATION_NAME        "ixotum"
 #define KSILIT_APPLICATION_NAME         "ksilit"
 #define KSILIT_LOG_FILE_NAME            "ksilit.log"
@@ -12,6 +12,18 @@
 
 #define KSILIT_SETTING_CATEGORY_GENERAL "General"
 #define KSILIT_SETTING_DEFAULT_PATH     "defaultPath"
+
+#define KSILIT_MAIN_WINDOW_MENU_FILE         "&File"
+#define KSILIT_MAIN_WINDOW_MENU_FILE_NEW     "&New"
+#define KSILIT_MAIN_WINDOW_MENU_FILE_OPEN    "&Open"
+#define KSILIT_MAIN_WINDOW_MENU_FILE_SAVE    "&Save"
+#define KSILIT_MAIN_WINDOW_MENU_FILE_SAVE_AS "Save As..."
+#define KSILIT_MAIN_WINDOW_MENU_FILE_QUIT    "&Quit"
+
+#define KSILIT_MAIN_WINDOW_MENU_EDIT "&Edit"
+
+#define KSILIT_MAIN_WINDOW_MENU_HELP       "&Help"
+#define KSILIT_MAIN_WINDOW_MENU_HELP_ABOUT "&About"
 
 #define KSILIT_JOTTER_ACTION_ADD_NOTE            "Add Note"
 #define KSILIT_JOTTER_ACTION_ADD_SUB_NOTE_TEXT   "Add Sub Note"
