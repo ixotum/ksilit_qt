@@ -174,31 +174,6 @@ int DataBase::write(QString filePath) {
   return rv;
 }
 
-/*QDomNode DataBase::getNextNode(QDomNode &currentNode, QDomNode &lastNode) {
-  DBGS(PRINT_START("currentNode: 0x%08x, lastNode: 0x%08x", &currentNode, &lastNode));
-
-  QDomNode nextNode;
-
-  if (!currentNode.childNodes().isEmpty()) {
-    nextNode = currentNode.firstChild();
-  }
-  else {
-    nextNode = currentNode.nextSibling();
-
-    while (nextNode.isNull()) {
-      QDomNode parentNode = currentNode.parentNode();
-      nextNode = parentNode.nextSibling();
-
-      if ((nextNode == lastNode) || (parentNode == lastNode)) {
-        break;
-      }
-    }
-  }
-
-  DBGR(PRINT_RETURN("nextNode: 0x%08x", &nextNode));
-  return nextNode;
-}*/
-
 QDomNode DataBase::getNextNode(QDomNode &currentNode, QDomNode &lastNode) {
   DBGS(PRINT_START("currentNode: 0x%08x, lastNode: 0x%08x", &currentNode, &lastNode));
 
