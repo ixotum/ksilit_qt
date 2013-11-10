@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
   jotter = new Jotter();
 
   allocateActions();
+  initActions();
   setupModel();
   createConnections();
   dataBaseInit();
@@ -54,11 +55,34 @@ MainWindow::~MainWindow()
 void MainWindow::allocateActions() {
   DBGS(PRINT_START(""));
 
-  jotterActionAddNote = new QAction(KSILIT_JOTTER_ACTION_ADD_NOTE, this);
+  ksilitActionFileNew    = new QAction(KSILIT_MAIN_WINDOW_MENU_FILE_NEW, this);
+  ksilitActionFileOpen   = new QAction(KSILIT_MAIN_WINDOW_MENU_FILE_OPEN, this);
+  ksilitActionFileSave   = new QAction(KSILIT_MAIN_WINDOW_MENU_FILE_SAVE, this);
+  ksilitActionFileSaveAs = new QAction(KSILIT_MAIN_WINDOW_MENU_FILE_SAVE_AS, this);
+  ksilitActionFileQuit   = new QAction(KSILIT_MAIN_WINDOW_MENU_FILE_QUIT, this);
+  ksilitActionHelpAbout  = new QAction(KSILIT_MAIN_WINDOW_MENU_HELP_ABOUT, this);
+
+  jotterActionAddNote    = new QAction(KSILIT_JOTTER_ACTION_ADD_NOTE, this);
   jotterActionAddSubNote = new QAction(KSILIT_JOTTER_ACTION_ADD_SUB_NOTE_TEXT, this);
-  jotterActionMoveUp = new QAction(KSILIT_JOTTER_ACTION_MOVE_UP, this);
-  jotterActionMoveDown = new QAction(KSILIT_JOTTER_ACTION_MOVE_DOWN, this);
+  jotterActionMoveUp     = new QAction(KSILIT_JOTTER_ACTION_MOVE_UP, this);
+  jotterActionMoveDown   = new QAction(KSILIT_JOTTER_ACTION_MOVE_DOWN, this);
   jotterActionDeleteNote = new QAction(KSILIT_JOTTER_ACTION_DELETE_NOTE_TEXT, this);
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::initActions() {
+  DBGS(PRINT_START(""));
+
+  ksilitActionFileOpen->setShortcut(Qt::CTRL + Qt::Key_O);
+  ksilitActionFileSave->setShortcut(Qt::CTRL + Qt::Key_S);
+  ksilitActionFileQuit->setShortcut(Qt::CTRL + Qt::Key_Q);
+
+  jotterActionAddNote->setShortcut(Qt::CTRL + Qt::Key_N);
+  jotterActionAddSubNote->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+  jotterActionMoveUp->setShortcut(Qt::CTRL + Qt::Key_Up);
+  jotterActionMoveDown->setShortcut(Qt::CTRL + Qt::Key_Down);
+  jotterActionDeleteNote->setShortcut(Qt::CTRL + Qt::Key_D);
 
   DBGR(PRINT_RETURN(""));
 }
@@ -66,23 +90,18 @@ void MainWindow::allocateActions() {
 void MainWindow::createConnections() {
   DBGS(PRINT_START(""));
 
-  connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(ksilitSlotHelpAbout()));
-  connect(ui->actionSave_As, SIGNAL(triggered()), this, SLOT(ksilitSlotFileSaveAs()));
-  connect(ui->action_Open, SIGNAL(triggered()), this, SLOT(ksilitSlotOpen()));
-  connect(ui->actionAdd_Note, SIGNAL(triggered()), this, SLOT(jotterSlotAddNote()));
-  connect(ui->actionAdd_Sub_Note, SIGNAL(triggered()), this, SLOT(jotterSlotAddSubNote()));
-  connect(ui->action_Delete_Note, SIGNAL(triggered()), this, SLOT(jotterSlotDeleteNote()));
-  connect(ui->actionMove_Up, SIGNAL(triggered()), this, SLOT(jotterSlotMoveUp()));
-  connect(ui->actionMove_Down, SIGNAL(triggered()), this, SLOT(jotterSlotMoveDown()));
-  connect(ui->action_Save, SIGNAL(triggered()), this, SLOT(ksilitSlotFileSave()));
-  connect(ui->menu_Edit, SIGNAL(aboutToShow()), this, SLOT(ksilitSlotMenuEditUpdate()));
-  connect(ui->action_New, SIGNAL(triggered()), this, SLOT(ksilitSlotFileNew()));
-
   connect(ui->jotterTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(jotterContextMenuRequest(QPoint)));
   connect(ui->jotterTreeView->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), this, SLOT(jotterSlotRowChanged(QModelIndex,QModelIndex)));
 
   QAbstractItemModel *model = ui->jotterTreeView->model();
   connect(model, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(jotterSlotItemRenamed()));
+
+  connect(ksilitActionFileNew, SIGNAL(triggered()), this, SLOT(ksilitSlotFileNew()));
+  connect(ksilitActionFileOpen, SIGNAL(triggered()), this, SLOT(ksilitSlotFileOpen()));
+  connect(ksilitActionFileSave, SIGNAL(triggered()), this, SLOT(ksilitSlotFileSave()));
+  connect(ksilitActionFileSaveAs, SIGNAL(triggered()), this, SLOT(ksilitSlotFileSaveAs()));
+  connect(ksilitActionFileQuit, SIGNAL(triggered()), this, SLOT(close()));
+  connect(ksilitActionHelpAbout, SIGNAL(triggered()), this, SLOT(ksilitSlotHelpAbout()));
 
   connect(jotterActionAddNote, SIGNAL(triggered()), this, SLOT(jotterSlotAddNote()));
   connect(jotterActionAddSubNote, SIGNAL(triggered()), this, SLOT(jotterSlotAddSubNote()));
@@ -91,6 +110,7 @@ void MainWindow::createConnections() {
   connect(jotterActionDeleteNote, SIGNAL(triggered()), this, SLOT(jotterSlotDeleteNote()));
 
   connect(ui->jotterNoteDescription, SIGNAL(textChanged()), this, SLOT(jotterSlotTextChanged()));
+  connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(ksilitSlotTabChanged(int)));
 
   DBGR(PRINT_RETURN(""));
 }
@@ -288,7 +308,7 @@ void MainWindow::ksilitSlotFileSaveAs() {
   DBGR(PRINT_RETURN(""))
 }
 
-void MainWindow::ksilitSlotOpen() {
+void MainWindow::ksilitSlotFileOpen() {
   DBGS(PRINT_START(""));
 
   int rv = ERROR_UNKNOWN_ERROR;
@@ -321,7 +341,7 @@ void MainWindow::ksilitSlotOpen() {
     }
   }
 
-  initMainWindow();
+  updateMainWindowTitle();
 
   DBGR(PRINT_RETURN(""));
 }
@@ -365,20 +385,12 @@ void MainWindow::updateActions() {
     jotterActionDeleteNote->setEnabled(true);
     jotterActionMoveUp->setEnabled(true);
     jotterActionMoveDown->setEnabled(true);
-    ui->action_Delete_Note->setEnabled(true);
-    ui->actionAdd_Note->setEnabled(true);
-    ui->actionMove_Up->setEnabled(true);
-    ui->actionMove_Down->setEnabled(true);
   }
   else {
     jotterActionAddNote->setEnabled(false);
     jotterActionDeleteNote->setEnabled(false);
     jotterActionMoveUp->setEnabled(false);
     jotterActionMoveDown->setEnabled(false);
-    ui->action_Delete_Note->setEnabled(false);
-    ui->actionAdd_Note->setEnabled(false);
-    ui->actionMove_Up->setEnabled(false);
-    ui->actionMove_Down->setEnabled(false);
   }
 
   QStandardItemModel *model = static_cast<QStandardItemModel *>(ui->jotterTreeView->model());
@@ -390,7 +402,6 @@ void MainWindow::updateActions() {
 
     if (selectedRow == 0) {
       jotterActionMoveUp->setEnabled(false);
-      ui->actionMove_Up->setEnabled(false);
     }
 
     QStandardItem *parentItem = selectedItem->parent();
@@ -404,19 +415,18 @@ void MainWindow::updateActions() {
 
     if (selectedRow == lastRow) {
       jotterActionMoveDown->setEnabled(false);
-      ui->actionMove_Down->setEnabled(false);
     }
   }
 
   if (isKsilitSaveEnabled()) {
     setWindowModified(true);
 
-    ui->action_Save->setEnabled(true);
+    ksilitActionFileSave->setEnabled(true);
   }
   else {
     setWindowModified(false);
 
-    ui->action_Save->setEnabled(false);
+    ksilitActionFileSave->setEnabled(false);
   }
 
   int rootChildCount = model->invisibleRootItem()->rowCount();
@@ -695,7 +705,63 @@ void MainWindow::setJotterTextChangingEnabled(bool flag) {
   flagJotterTextChangingEnabled = flag;
 }
 
-void MainWindow::initMainWindow() {
+void MainWindow::initMainWindowMenuFile() {
+  DBGS(PRINT_START(""));
+
+  QMenu *menuFile = new QMenu(KSILIT_MAIN_WINDOW_MENU_FILE);
+  menuBar()->addMenu(menuFile);
+  menuFile->addAction(ksilitActionFileNew);
+  menuFile->addAction(ksilitActionFileOpen);
+  menuFile->addAction(ksilitActionFileSave);
+  menuFile->addAction(ksilitActionFileSaveAs);
+  menuFile->addAction(ksilitActionFileQuit);
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::updateMainWindowMenuEdit() {
+  DBGS(PRINT_START(""));
+
+  QMenu *menuEdit = new QMenu(KSILIT_MAIN_WINDOW_MENU_EDIT);
+  menuBar()->addMenu(menuEdit);
+
+  int currentTab = ui->tabWidget->currentIndex();
+
+  switch (currentTab) {
+  case KSILIT_JOTTER_TAB_INDEX :
+    menuEdit->addAction(jotterActionAddNote);
+    menuEdit->addAction(jotterActionAddSubNote);
+    menuEdit->addAction(jotterActionMoveUp);
+    menuEdit->addAction(jotterActionMoveDown);
+    menuEdit->addAction(jotterActionDeleteNote);
+    break;
+  }
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::initMainWindowMenuHelp() {
+  DBGS(PRINT_START(""));
+
+  QMenu *menuHelp = new QMenu(KSILIT_MAIN_WINDOW_MENU_HELP);
+  menuBar()->addMenu(menuHelp);
+  menuHelp->addAction(ksilitActionHelpAbout);
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::updateMainWindowMenuBar() {
+  DBGS(PRINT_START(""));
+
+  menuBar()->clear();
+  initMainWindowMenuFile();
+  updateMainWindowMenuEdit();
+  initMainWindowMenuHelp();
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::updateMainWindowTitle() {
   DBGS(PRINT_START(""));
 
   QString dataBaseFile = dataBasePath.section('/', -1);//ksilit.ksi default
@@ -706,6 +772,15 @@ void MainWindow::initMainWindow() {
   mainWindowTitle += " ";
   mainWindowTitle += KSILIT_VERSION;
   setWindowTitle(mainWindowTitle);
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::initMainWindow() {
+  DBGS(PRINT_START(""));
+
+  updateMainWindowTitle();
+  updateMainWindowMenuBar();
 
   DBGR(PRINT_RETURN(""));
 }
@@ -821,4 +896,12 @@ QMessageBox::StandardButton MainWindow::jotterDeleteRequest() {
 
     DBGR(PRINT_RETURN(""));
     return button;
+}
+
+void MainWindow::ksilitSlotTabChanged(const int &index) {
+  DBGS(PRINT_START("index: %d", index));
+
+  updateMainWindowMenuBar();
+
+  DBGR(PRINT_RETURN(""));
 }

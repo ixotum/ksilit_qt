@@ -23,10 +23,11 @@ public:
 private slots:
   void ksilitSlotHelpAbout();
   void ksilitSlotFileSaveAs();
-  void ksilitSlotOpen();
+  void ksilitSlotFileOpen();
   void ksilitSlotMenuEditUpdate();
   void ksilitSlotFileSave();
   void ksilitSlotFileNew();
+  void ksilitSlotTabChanged(const int &index);
   void jotterContextMenuRequest(const QPoint &position);
   void jotterSlotAddNote();
   void jotterSlotAddSubNote();
@@ -39,6 +40,7 @@ private slots:
 
 private:
   void allocateActions();
+  void initActions();
   void createConnections();
   void setupModel();
   void dataBaseInit();
@@ -53,6 +55,11 @@ private:
   int jotterSaveCurrentText();
   bool isJotterTextChangingEnabled();
   void setJotterTextChangingEnabled(bool flag);
+  void initMainWindowMenuFile();
+  void updateMainWindowMenuEdit();
+  void initMainWindowMenuHelp();
+  void updateMainWindowMenuBar();
+  void updateMainWindowTitle();
   void initMainWindow();
   void initSettings();
   void setSetting(const QString &category, const QString &setting, const QVariant &value);
@@ -68,6 +75,13 @@ private:
   QString dataBasePath;
   DataBase dataBase;
   QSettings *settings;
+
+  QAction *ksilitActionFileNew;
+  QAction *ksilitActionFileOpen;
+  QAction *ksilitActionFileSave;
+  QAction *ksilitActionFileSaveAs;
+  QAction *ksilitActionFileQuit;
+  QAction *ksilitActionHelpAbout;
 
   QAction *jotterActionAddNote;
   QAction *jotterActionAddSubNote;
