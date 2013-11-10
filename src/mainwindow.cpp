@@ -110,6 +110,7 @@ void MainWindow::createConnections() {
   connect(jotterActionDeleteNote, SIGNAL(triggered()), this, SLOT(jotterSlotDeleteNote()));
 
   connect(ui->jotterNoteDescription, SIGNAL(textChanged()), this, SLOT(jotterSlotTextChanged()));
+  connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(ksilitSlotTabChanged(int)));
 
   DBGR(PRINT_RETURN(""));
 }
@@ -718,16 +719,23 @@ void MainWindow::initMainWindowMenuFile() {
   DBGR(PRINT_RETURN(""));
 }
 
-void MainWindow::initMainWindowMenuEdit() {
+void MainWindow::updateMainWindowMenuEdit() {
   DBGS(PRINT_START(""));
 
   QMenu *menuEdit = new QMenu(KSILIT_MAIN_WINDOW_MENU_EDIT);
   menuBar()->addMenu(menuEdit);
-  menuEdit->addAction(jotterActionAddNote);
-  menuEdit->addAction(jotterActionAddSubNote);
-  menuEdit->addAction(jotterActionMoveUp);
-  menuEdit->addAction(jotterActionMoveDown);
-  menuEdit->addAction(jotterActionDeleteNote);
+
+  int currentTab = ui->tabWidget->currentIndex();
+
+  switch (currentTab) {
+  case KSILIT_JOTTER_TAB_INDEX :
+    menuEdit->addAction(jotterActionAddNote);
+    menuEdit->addAction(jotterActionAddSubNote);
+    menuEdit->addAction(jotterActionMoveUp);
+    menuEdit->addAction(jotterActionMoveDown);
+    menuEdit->addAction(jotterActionDeleteNote);
+    break;
+  }
 
   DBGR(PRINT_RETURN(""));
 }
@@ -742,11 +750,12 @@ void MainWindow::initMainWindowMenuHelp() {
   DBGR(PRINT_RETURN(""));
 }
 
-void MainWindow::initMainWindowMenuBar() {
+void MainWindow::updateMainWindowMenuBar() {
   DBGS(PRINT_START(""));
 
+  menuBar()->clear();
   initMainWindowMenuFile();
-  initMainWindowMenuEdit();
+  updateMainWindowMenuEdit();
   initMainWindowMenuHelp();
 
   DBGR(PRINT_RETURN(""));
@@ -771,7 +780,7 @@ void MainWindow::initMainWindow() {
   DBGS(PRINT_START(""));
 
   updateMainWindowTitle();
-  initMainWindowMenuBar();
+  updateMainWindowMenuBar();
 
   DBGR(PRINT_RETURN(""));
 }
@@ -887,4 +896,12 @@ QMessageBox::StandardButton MainWindow::jotterDeleteRequest() {
 
     DBGR(PRINT_RETURN(""));
     return button;
+}
+
+void MainWindow::ksilitSlotTabChanged(const int &index) {
+  DBGS(PRINT_START("index: %d", index));
+
+  updateMainWindowMenuBar();
+
+  DBGR(PRINT_RETURN(""));
 }

@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define KSILIT_VERSION                  "0.1.0"
+#define KSILIT_VERSION                  "0.1.1"
 #define KSILIT_ORGANIZATION_NAME        "ixotum"
 #define KSILIT_APPLICATION_NAME         "ksilit"
 #define KSILIT_LOG_FILE_NAME            "ksilit.log"
@@ -43,6 +43,8 @@
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_ID   "id"
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_NAME "name"
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_TEXT "text"
+
+#define KSILIT_JOTTER_TAB_INDEX 0
 
 #define ALL_OK                0
 #define ERROR_UNKNOWN_ERROR   1

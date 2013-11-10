@@ -16,17 +16,39 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QTreeView" name="jotterTreeView">
-      <property name="contextMenuPolicy">
-       <enum>Qt::CustomContextMenu</enum>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::West</enum>
       </property>
-      <property name="dragDropMode">
-       <enum>QAbstractItemView::InternalMove</enum>
+      <property name="currentIndex">
+       <number>0</number>
       </property>
+      <widget class="QWidget" name="jotterTab">
+       <attribute name="title">
+        <string>Jotter</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QTreeView" name="jotterTreeView">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::InternalMove</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPlainTextEdit" name="jotterNoteDescription"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Tasker</string>
+       </attribute>
+      </widget>
      </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPlainTextEdit" name="jotterNoteDescription"/>
     </item>
    </layout>
   </widget>

@@ -27,6 +27,7 @@ private slots:
   void ksilitSlotMenuEditUpdate();
   void ksilitSlotFileSave();
   void ksilitSlotFileNew();
+  void ksilitSlotTabChanged(const int &index);
   void jotterContextMenuRequest(const QPoint &position);
   void jotterSlotAddNote();
   void jotterSlotAddSubNote();
@@ -55,9 +56,9 @@ private:
   bool isJotterTextChangingEnabled();
   void setJotterTextChangingEnabled(bool flag);
   void initMainWindowMenuFile();
-  void initMainWindowMenuEdit();
+  void updateMainWindowMenuEdit();
   void initMainWindowMenuHelp();
-  void initMainWindowMenuBar();
+  void updateMainWindowMenuBar();
   void updateMainWindowTitle();
   void initMainWindow();
   void initSettings();
