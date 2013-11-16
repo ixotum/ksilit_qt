@@ -47,6 +47,11 @@
        <attribute name="title">
         <string>Tasker</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <widget class="QTreeView" name="taskerTreeView"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
