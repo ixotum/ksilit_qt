@@ -23,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
 
   jotter = new Jotter();
+  tasker = new Tasker();
 
   allocateActions();
   initActions();
@@ -68,6 +69,8 @@ void MainWindow::allocateActions() {
   jotterActionMoveDown   = new QAction(KSILIT_JOTTER_ACTION_MOVE_DOWN, this);
   jotterActionDeleteNote = new QAction(KSILIT_JOTTER_ACTION_DELETE_NOTE_TEXT, this);
 
+  taskerActionAddSubTask = new QAction(KSILIT_TASKER_ACTION_ADD_SUB_TASK, this);
+
   DBGR(PRINT_RETURN(""));
 }
 
@@ -83,6 +86,8 @@ void MainWindow::initActions() {
   jotterActionMoveUp->setShortcut(Qt::CTRL + Qt::Key_Up);
   jotterActionMoveDown->setShortcut(Qt::CTRL + Qt::Key_Down);
   jotterActionDeleteNote->setShortcut(Qt::CTRL + Qt::Key_D);
+
+  taskerActionAddSubTask->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_N);
 
   DBGR(PRINT_RETURN(""));
 }
@@ -112,6 +117,9 @@ void MainWindow::createConnections() {
   connect(ui->jotterNoteDescription, SIGNAL(textChanged()), this, SLOT(jotterSlotTextChanged()));
   connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(ksilitSlotTabChanged(int)));
 
+  connect(ui->taskerTreeView, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(taskerContextMenuRequest(QPoint)));
+  connect(taskerActionAddSubTask, SIGNAL(triggered()), this, SLOT(taskerSlotAddSubTask()));
+
   DBGR(PRINT_RETURN(""));
 }
 
@@ -121,9 +129,16 @@ void MainWindow::setupModel() {
   QStandardItemModel *jotterModel = new QStandardItemModel();
   ui->jotterTreeView->setModel(jotterModel);
 
-  QStandardItem *headerItem = new QStandardItem;
-  headerItem->setText(KSILIT_JOTTER_HEADER_COLUMN_NAME_TEXT);
-  jotterModel->setHorizontalHeaderItem(KSILIT_JOTTER_HEADER_COLUMN_NAME_NUMBER, headerItem);
+  QStandardItem *jotterHeaderItem = new QStandardItem();
+  jotterHeaderItem->setText(KSILIT_JOTTER_HEADER_COLUMN_NAME_TEXT);
+  jotterModel->setHorizontalHeaderItem(KSILIT_JOTTER_HEADER_COLUMN_NAME_NUMBER, jotterHeaderItem);
+
+  QStandardItemModel *taskerModel = new QStandardItemModel();
+  ui->taskerTreeView->setModel(taskerModel);
+
+  QStandardItem *taskerHeaderItem = new QStandardItem();
+  taskerHeaderItem->setText(KSILIT_TASKER_HEADER_COLUMN_NAME_TEXT);
+  taskerModel->setHorizontalHeaderItem(KSILIT_TASKER_HEADER_COLUMN_NAME_NUMBER, taskerHeaderItem);
 
   DBGR(PRINT_RETURN(""));
 }
@@ -735,6 +750,9 @@ void MainWindow::updateMainWindowMenuEdit() {
     menuEdit->addAction(jotterActionMoveDown);
     menuEdit->addAction(jotterActionDeleteNote);
     break;
+  case KSILIT_TASKER_TAB_INDEX :
+    menuEdit->addAction(taskerActionAddSubTask);
+    break;
   }
 
   DBGR(PRINT_RETURN(""));
@@ -902,6 +920,67 @@ void MainWindow::ksilitSlotTabChanged(const int &index) {
   DBGS(PRINT_START("index: %d", index));
 
   updateMainWindowMenuBar();
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::taskerContextMenuRequest(const QPoint &position) {
+  DBGS(PRINT_START("position.x: %d, position.y: %d", position.x(), position.y()));
+
+  QMenu taskerContextMenu(this);
+
+  taskerContextMenu.addAction(taskerActionAddSubTask);
+
+  updateActions();
+
+  taskerContextMenu.exec(ui->taskerTreeView->viewport()->mapToGlobal(position));
+
+  DBGR(PRINT_RETURN(""));
+}
+
+void MainWindow::setTaskerRenameEnabled(bool flag) {
+  flagTaskerRenameEnabled = flag;
+}
+
+void MainWindow::taskerSlotAddSubTask() {
+  DBGS(PRINT_START(""));
+
+  QStandardItemModel *model = static_cast<QStandardItemModel *>(ui->taskerTreeView->model());
+  QModelIndex currentIndex = ui->taskerTreeView->selectionModel()->currentIndex();
+  QStandardItem *parentItem = 0;
+
+  if (currentIndex.isValid()) {
+    parentItem = model->itemFromIndex(currentIndex);
+  }
+  else {
+    parentItem = model->invisibleRootItem();
+  }
+
+  QStandardItem *childItem = new QStandardItem();
+  parentItem->appendRow(childItem);
+
+  if (parentItem == model->invisibleRootItem()) {
+    QModelIndex childIndex = model->indexFromItem(childItem);
+    ui->taskerTreeView->selectionModel()->setCurrentIndex(childIndex, QItemSelectionModel::ClearAndSelect);
+  }
+
+  QString childText = KSILIT_TASKER_NEW_TASK_TEXT;
+  int childRow = childItem->row();
+  childText += " ";
+  childText += QString::number(childRow);
+  setTaskerRenameEnabled(false);
+  childItem->setText(childText);
+
+  int id = tasker->createTask();
+  QVariant itemData = id;
+
+  childItem->setData(itemData);
+  setTaskerRenameEnabled(true);
+
+  tasker->setName(id, childText);
+
+  setKsilitSaveEnabled(true);
+  updateActions();
 
   DBGR(PRINT_RETURN(""));
 }

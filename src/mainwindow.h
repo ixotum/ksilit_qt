@@ -6,6 +6,7 @@
 #include <QMessageBox>
 
 #include "jotter.h"
+#include "tasker.h"
 #include "database.h"
 
 namespace Ui {
@@ -37,6 +38,8 @@ private slots:
   void jotterSlotRowChanged(const QModelIndex &current, const QModelIndex &previousIndex);
   void jotterSlotMoveDown();
   void jotterSlotTextChanged();
+  void taskerContextMenuRequest(const QPoint &position);
+  void taskerSlotAddSubTask();
 
 private:
   void allocateActions();
@@ -67,11 +70,13 @@ private:
   int ksilitLoadDataBase();
   QMessageBox::StandardButton saveRequest();
   QMessageBox::StandardButton jotterDeleteRequest();
+  void setTaskerRenameEnabled(bool flag);
 
   void closeEvent(QCloseEvent *event);
 
   Ui::MainWindow *ui;
   Jotter *jotter;
+  Tasker *tasker;
   QString dataBasePath;
   DataBase dataBase;
   QSettings *settings;
@@ -89,10 +94,13 @@ private:
   QAction *jotterActionMoveDown;
   QAction *jotterActionDeleteNote;
 
+  QAction *taskerActionAddSubTask;
+
   bool flagKsilitSaveEnabled;
   bool flagJotterRenameEnabled;
   bool flagJotterTextChanged;
   bool flagJotterTextChangingEnabled;
+  bool flagTaskerRenameEnabled;
 };
 
 #endif // MAINWINDOW_H

@@ -18,6 +18,8 @@ private slots:
   void jotter_test_text();
   void database_test_write();
   void database_test_read();
+  void task_test_name();
+  void tasker_test_task_creating();
 };
 
 #endif // KSILITUNITTEST_H

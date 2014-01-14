@@ -5,6 +5,8 @@
 #include "jot.h"
 #include "jotter.h"
 #include "database.h"
+#include "task.h"
+#include "tasker.h"
 
 KsilitUnitTest::KsilitUnitTest()
 {
@@ -47,18 +49,18 @@ void KsilitUnitTest::jot_test_text() {
 }
 
 void KsilitUnitTest::jotter_test_jot_creating() {
-  Jotter jotter;
-  int id = jotter.createJot();
+  Jotter *jotter = new Jotter();
+  int id = jotter->createJot();
   QCOMPARE(id, 1);
 
-  QString name = jotter.getName(id);
+  QString name = jotter->getName(id);
   QVERIFY(name.isEmpty());
 
   QString setName = "test name";
-  int rv = jotter.setName(id, setName);
+  int rv = jotter->setName(id, setName);
   QCOMPARE(rv, 0);
 
-  QString getName = jotter.getName(id);
+  QString getName = jotter->getName(id);
   QCOMPARE(setName, getName);
 }
 
@@ -148,4 +150,33 @@ void KsilitUnitTest::jotter_test_text() {
 
   QString getText = jotter.getText(id);
   QCOMPARE(setText, getText);
+}
+
+void KsilitUnitTest::task_test_name() {
+  Task *task = new Task();
+  QVERIFY(task);
+
+  QString name = task->getName();
+  QVERIFY(name.isEmpty());
+
+  QString setName = "test name";
+  task->setName(setName);
+  QString getName = task->getName();
+  QCOMPARE(setName, getName);
+}
+
+void KsilitUnitTest::tasker_test_task_creating() {
+  Tasker *tasker = new Tasker();
+  int id = tasker->createTask();
+  QCOMPARE(id, 1);
+
+  QString name = tasker->getName(id);
+  QVERIFY(name.isEmpty());
+
+  QString setName = "test name";
+  int rv = tasker->setName(id, setName);
+  QCOMPARE(rv, 0);
+
+  QString getName = tasker->getName(id);
+  QCOMPARE(setName, getName);
 }

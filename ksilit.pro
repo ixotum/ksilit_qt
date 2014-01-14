@@ -5,7 +5,9 @@ SOURCES += \
     src/mainwindow.cpp \
     src/jot.cpp \
     src/jotter.cpp \
-    src/database.cpp
+    src/database.cpp \
+    src/tasker.cpp \
+    src/task.cpp
 
 HEADERS += \
     src/dbg.h \
@@ -14,7 +16,9 @@ HEADERS += \
     src/mainwindow.h \
     src/jot.h \
     src/jotter.h \
-    src/database.h
+    src/database.h \
+    src/tasker.h \
+    src/task.h
 
 FORMS += \
     src/mainwindow.ui

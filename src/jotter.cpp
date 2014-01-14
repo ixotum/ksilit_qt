@@ -56,11 +56,11 @@ int Jotter::createJot(int useId) {
   return id;
 }
 
-//Returns 0 if jot not found
+//Returns NULL if jot not found
 Jot *Jotter::getJot(int id) {
   DBGS(PRINT_START("id: %i", id));
 
-  Jot *jot = 0;
+  Jot *jot = NULL;
 
   if (map.contains(id)) {
     jot = map.value(id);
@@ -69,7 +69,7 @@ Jot *Jotter::getJot(int id) {
     DBGE(PRINT_ERROR("Jot with id: %i not found!", id));
   }
 
-  DBGR(PRINT_RETURN("jot: 0x%08x", jot));
+  DBGR(PRINT_RETURN("jot: %p", jot));
   return jot;
 }
 

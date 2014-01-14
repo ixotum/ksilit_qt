@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define KSILIT_VERSION                  "0.1.1"
+#define KSILIT_VERSION                  "0.1.2"
 #define KSILIT_ORGANIZATION_NAME        "ixotum"
 #define KSILIT_APPLICATION_NAME         "ksilit"
 #define KSILIT_LOG_FILE_NAME            "ksilit.log"
@@ -25,15 +25,20 @@
 #define KSILIT_MAIN_WINDOW_MENU_HELP       "&Help"
 #define KSILIT_MAIN_WINDOW_MENU_HELP_ABOUT "&About"
 
-#define KSILIT_JOTTER_ACTION_ADD_NOTE            "Add Note"
-#define KSILIT_JOTTER_ACTION_ADD_SUB_NOTE_TEXT   "Add Sub Note"
-#define KSILIT_JOTTER_ACTION_MOVE_UP             "Move Up"
-#define KSILIT_JOTTER_ACTION_MOVE_DOWN           "Move Down"
-#define KSILIT_JOTTER_ACTION_DELETE_NOTE_TEXT    "Delete Note"
-#define KSILIT_JOTTER_HEADER_COLUMN_NAME_NUMBER  0
-#define KSILIT_JOTTER_HEADER_COLUMN_NAME_TEXT    "Notes"
-#define KSILIT_JOTTER_NEW_NOTE_TEXT              "New Note"
-#define KSILIT_JOTTER_DELETE_REQUEST             "Would you like to delete selected item?"
+#define KSILIT_JOTTER_ACTION_ADD_NOTE           "Add Note"
+#define KSILIT_JOTTER_ACTION_ADD_SUB_NOTE_TEXT  "Add Sub Note"
+#define KSILIT_JOTTER_ACTION_MOVE_UP            "Move Up"
+#define KSILIT_JOTTER_ACTION_MOVE_DOWN          "Move Down"
+#define KSILIT_JOTTER_ACTION_DELETE_NOTE_TEXT   "Delete Note"
+#define KSILIT_JOTTER_HEADER_COLUMN_NAME_NUMBER 0
+#define KSILIT_JOTTER_HEADER_COLUMN_NAME_TEXT   "Notes"
+#define KSILIT_JOTTER_NEW_NOTE_TEXT             "New Note"
+#define KSILIT_JOTTER_DELETE_REQUEST            "Would you like to delete selected item?"
+
+#define KSILIT_TASKER_HEADER_COLUMN_NAME_NUMBER 0
+#define KSILIT_TASKER_HEADER_COLUMN_NAME_TEXT   "Tasks"
+#define KSILIT_TASKER_ACTION_ADD_SUB_TASK       "Add Sub Task"
+#define KSILIT_TASKER_NEW_TASK_TEXT             "New Task"
 
 #define KSILIT_DOM_TAG                           "Ksilit"
 #define KSILIT_JOTTER_DOM_HEADER_TAG             "JotterHeader"
@@ -45,6 +50,7 @@
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_TEXT "text"
 
 #define KSILIT_JOTTER_TAB_INDEX 0
+#define KSILIT_TASKER_TAB_INDEX 1
 
 #define ALL_OK                0
 #define ERROR_UNKNOWN_ERROR   1
