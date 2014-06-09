@@ -12,10 +12,13 @@ public:
   int createTask(int useId = -1);
   QString getName(int id);
   int setName(int id, QString taskName);
+  int getTaskCount();
+  int setTaskCount(int num);
+  QString getText(int id);
+  int setText(int id, QString taskText);
 
 private:
   void incTaskCounter();
-  int getTaskCount();
   Task *getTask(int id);
 
   int taskCounter;

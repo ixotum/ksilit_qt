@@ -11,3 +11,11 @@ QString Task::getName() {
 void Task::setName(QString taskName) {
   name = taskName;
 }
+
+QString Task::getText() {
+  return text;
+}
+
+void Task::setText(QString taskText) {
+  text = taskText;
+}

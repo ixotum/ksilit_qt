@@ -16,7 +16,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
-  ui(new Ui::MainWindow)
+  ui(new Ui::MainWindow),
+  dataBase(NULL)
 {
   DBGS(PRINT_START(""));
 
@@ -146,11 +147,18 @@ void MainWindow::setupModel() {
 void MainWindow::dataBaseInit() {
   DBGS(PRINT_START(""));
 
-  QStandardItemModel *model = static_cast<QStandardItemModel *>(ui->jotterTreeView->model());
-  QStandardItem *rootItem = model->invisibleRootItem();
+  QStandardItemModel *jotterModel = static_cast<QStandardItemModel *>(ui->jotterTreeView->model());
+  QStandardItem *rootJotterItem = jotterModel->invisibleRootItem();
+  //dataBase.setRootJotterItem(rootJotterItem);
 
-  dataBase.setRootItem(rootItem);
-  dataBase.setJotter(jotter);
+  QStandardItemModel *taskerModel = static_cast<QStandardItemModel *>(ui->taskerTreeView->model());
+  QStandardItem *rootTaskerItem = taskerModel->invisibleRootItem();
+  //dataBase.setRootTaskerItem(rootTaskerItem);
+
+  //dataBase.setJotter(jotter);
+  //dataBase.setTasker(tasker);
+
+  dataBase = new DataBase(jotter, rootJotterItem, tasker, rootTaskerItem);
 
   DBGR(PRINT_RETURN(""));
 }
@@ -278,7 +286,7 @@ int MainWindow::dataBaseSaveDialog() {
     if (!fileList.isEmpty()) {
       dataBasePath = fileList.at(0);
 
-      rv = dataBase.write(dataBasePath);
+      rv = dataBase->write(dataBasePath);
       if (rv) {
         DBGE(PRINT_ERROR("Error writing ksilit data base!"));
       }
@@ -613,7 +621,7 @@ void MainWindow::ksilitSlotFileSave() {
       rv = dataBaseSaveDialog();
     }
     else {
-      rv = dataBase.write(dataBasePath);
+      rv = dataBase->write(dataBasePath);
     }
 
     if (rv == ALL_OK) {
@@ -842,7 +850,7 @@ int MainWindow::ksilitLoadDataBase(){
   int rv = ERROR_UNKNOWN_ERROR;
 
   setJotterRenameEnabled(false);
-  rv = dataBase.read(dataBasePath);
+  rv = dataBase->read(dataBasePath);
   setJotterRenameEnabled(true);
 
   //Restore text for the first index

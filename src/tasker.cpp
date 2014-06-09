@@ -21,6 +21,51 @@ int Tasker::getTaskCount() {
   return taskCounter;
 }
 
+int Tasker::setTaskCount(int num) {
+  int rv = ERROR_UNKNOWN_ERROR;
+  if (num >= 0) {
+    taskCounter = num;
+    rv = ALL_OK;
+  }
+
+  return rv;
+}
+
+QString Tasker::getText(int id) {
+  DBGS(PRINT_START("id: %i", id));
+
+  QString text;
+  Task *task = getTask(id);
+
+  if (task) {
+    text = task->getText();
+  }
+  else {
+    DBGE(PRINT_ERROR("Task with id: %i not found!", id));
+  }
+
+  DBGR(PRINT_RETURN("text: %s", qPrintable(text)));
+  return text;
+}
+
+int Tasker::setText(int id, QString taskText) {
+  DBGS(PRINT_START("id: %i, taskText: %s", id, qPrintable(taskText)));
+
+  int rv = ERROR_UNKNOWN_ERROR;
+  Task *task = getTask(id);
+
+  if (task) {
+    task->setText(taskText);
+    rv = ALL_OK;
+  }
+  else {
+    DBGE(PRINT_ERROR("Task with id: %i not found!", id));
+  }
+
+  DBGR(PRINT_RETURN("rv: %i", rv));
+  return rv;
+}
+
 //Return id of a new task
 //if useId == -1, next id from taskCounter will be used
 //else id = useId

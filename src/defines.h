@@ -1,7 +1,7 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#define KSILIT_VERSION                  "0.1.2"
+#define KSILIT_VERSION                  "0.1.3"
 #define KSILIT_ORGANIZATION_NAME        "ixotum"
 #define KSILIT_APPLICATION_NAME         "ksilit"
 #define KSILIT_LOG_FILE_NAME            "ksilit.log"
@@ -49,12 +49,21 @@
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_NAME "name"
 #define KSILIT_JOTTER_DOM_ELEMENT_ATTRIBUTE_TEXT "text"
 
+#define KSILIT_TASKER_DOM_HEADER_TAG             "TaskerHeader"
+#define KSILIT_TASKER_DOM_TASK_COUNTER           "taskCounter"
+#define KSILIT_TASKER_DOM_BODY_TAG               "TaskerBody"
+#define KSILIT_TASKER_DOM_ELEMENT_TAG            "Task"
+#define KSILIT_TASKER_DOM_ELEMENT_ATTRIBUTE_ID   "id"
+#define KSILIT_TASKER_DOM_ELEMENT_ATTRIBUTE_NAME "name"
+#define KSILIT_TASKER_DOM_ELEMENT_ATTRIBUTE_TEXT "text"
+
 #define KSILIT_JOTTER_TAB_INDEX 0
 #define KSILIT_TASKER_TAB_INDEX 1
 
-#define ALL_OK                0
-#define ERROR_UNKNOWN_ERROR   1
-#define ERROR_OPENING_FILE    2
-#define ERROR_ACTION_CANCELED 3
+#define ALL_OK                   0
+#define ERROR_UNKNOWN_ERROR      1
+#define ERROR_OPENING_FILE       2
+#define ERROR_ACTION_CANCELED    3
+#define ERROR_DB_NOT_INITIALIZED 4
 
 #endif // DEFINES_H

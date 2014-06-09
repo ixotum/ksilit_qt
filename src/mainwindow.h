@@ -78,7 +78,7 @@ private:
   Jotter *jotter;
   Tasker *tasker;
   QString dataBasePath;
-  DataBase dataBase;
+  DataBase *dataBase;
   QSettings *settings;
 
   QAction *ksilitActionFileNew;
